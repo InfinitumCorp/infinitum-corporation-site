@@ -4,8 +4,9 @@ import * as command from './views/command.js';
 import * as studio from './views/studio.js';
 import * as connect from './views/connect.js';
 import * as earnings from './views/earnings.js';
+import * as settings from './views/settings.js';
 
-const ROUTES = { command, studio, connect, earnings };
+const ROUTES = { command, studio, connect, earnings, settings };
 const main = document.getElementById('main');
 let current = null;
 let root = null;
@@ -29,13 +30,15 @@ function routeName() {
 function renderView() {
   // Keep focus and caret in text fields across re-renders.
   const active = document.activeElement;
-  const key = active && root?.contains(active) && active.name ? active.name : null;
+  const key = active && root?.contains(active) && active.name
+    ? (active.form?.dataset.run ? `form[data-run="${active.form.dataset.run}"] [name="${active.name}"]` : `[name="${active.name}"]`)
+    : null;
   const sel = key && 'selectionStart' in active ? [active.selectionStart, active.selectionEnd] : null;
 
   root.innerHTML = ROUTES[current].render();
 
   if (key) {
-    const el = root.querySelector(`[name="${key}"]`);
+    const el = root.querySelector(key);
     if (el) { el.focus(); if (sel && el.setSelectionRange) try { el.setSelectionRange(...sel); } catch { /* noop */ } }
   }
   renderNav();

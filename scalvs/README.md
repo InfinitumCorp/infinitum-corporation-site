@@ -8,7 +8,8 @@ This is the first working prototype of the four-step flow from the [product page
 |---|---|---|
 | 01 Create | **Agent Studio** | Six templates (Researcher, Writer, Coder, Sales rep, Operator, Support); name, role, instructions, tools, Context Vault, approval and schedule per agent; plan-based agent limits; multi-agent **teams** run in sequence (/CNDCTR/-style), each agent building on the previous output. |
 | 02 Connect | **Connect** | Toggle connections to your apps and Infinitum products (simulated); **Nexus Context Vault** entries with per-product permissions that agents read when memory is on. |
-| 03 Run | **Command Center** | Chat-style composer to give an agent or team a task; agent output **streams in live**; **Stop** a running task; **human approval** gates; copy any agent's output; AI-credit meter per plan; schedules list. |
+| 03 Run | **Command Center** | Chat-style composer to give an agent or team a task; agent output **streams in live**; **Stop** a running task; **human approval** gates; copy any agent's output; **follow up** on a finished run to have an agent revise its answer; agents with the Web search tool **search the web** (live mode) and show their sources; AI-credit meter per plan; schedules list. |
+| — | **Settings** | Runtime status; **export / import** the whole workspace as JSON to move it between browsers or devices; reset. |
 | 04 Earn | **Earnings & Data Wallet** | Activity credits and capped **$SCLV** rewards on verified runs, ad revenue share opt-in (Free plan), data licensing with an 85% share, ledger, plan switcher. |
 
 > **Simulated economy.** $SCLV, balances, sales and the ledger are mock values stored in the browser. No tokens, wallets, blockchain transactions or payments are involved.
@@ -17,7 +18,7 @@ This is the first working prototype of the four-step flow from the [product page
 
 Agent steps run through `api/run.js`, a Vercel serverless function that calls the Claude Messages API.
 
-- **Live:** set `ANTHROPIC_API_KEY` in the Vercel project (optionally `SCALVS_MODEL`, default `claude-sonnet-5-5`, and `ANTHROPIC_BASE_URL` for a gateway). Agents then produce real work, streamed token by token.
+- **Live:** set `ANTHROPIC_API_KEY` in the Vercel project (optionally `SCALVS_MODEL`, default `claude-sonnet-5-5`, and `ANTHROPIC_BASE_URL` for a gateway). Agents then produce real work, streamed token by token. Agents with **Web search** use Claude's web search tool (`SCALVS_WEB_SEARCH_TOOL`, default `web_search_20250305`; set `SCALVS_WEB_SEARCH=off` to disable). If web search isn't enabled for your API key, the request is retried without it.
 - **Demo:** with no key the function answers `503` and the app falls back to simulated agent output, so everything still works end to end.
 
 The composer shows which mode is active.
@@ -44,7 +45,7 @@ src/app.js            hash router, re-rendering
 src/store.js          localStorage state (agents, teams, runs, vault, wallet)
 src/runner.js         run lifecycle: sequencing, approvals, credits, rewards
 src/data.js           templates, plans, connectors, reward rules
-src/views/*.js        command, studio, connect, earnings
+src/views/*.js        command, studio, connect, earnings, settings
 src/styles.css        clean white UI
 api/run.js            Claude-backed agent step (Vercel function)
 dev-server.mjs        zero-dependency local server
@@ -55,6 +56,6 @@ dev-server.mjs        zero-dependency local server
 - Accounts (Cumulus://ID) and a database so agents, runs and the vault sync across devices
 - Real connectors (email, Slack, GitHub) behind OAuth, with approvals enforced server-side
 - Server-side scheduler for scheduled agents
-- Tool use in the agent runtime (web search, files) with per-tool approval
+- More real tools (files, email drafts) with per-tool approval
 
 © 2026 Infinitum Corporation

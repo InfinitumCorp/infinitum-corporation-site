@@ -73,6 +73,12 @@ export function subscribe(fn) {
   return () => listeners.delete(fn);
 }
 
+export function replaceState(next) {
+  state = { ...seed(), ...next };
+  persist();
+  listeners.forEach((fn) => fn(state));
+}
+
 export function reset() {
   state = seed();
   persist();

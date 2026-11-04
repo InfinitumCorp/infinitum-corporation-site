@@ -1,6 +1,6 @@
 import { getState, plan } from '../store.js';
 import { TEMPLATES, REWARD_RULES } from '../data.js';
-import { startRun, approve, reject, stopRun, clearFinished, isLive } from '../runner.js';
+import { startRun, approve, reject, stopRun, followUp, clearFinished, isLive } from '../runner.js';
 import { esc, md, ago, fmt, statusLabel, toast } from '../ui.js';
 
 let target = null;   // "agent:<id>" | "team:<id>"
@@ -29,7 +29,29 @@ function exampleFor() {
   return tpl ? `e.g. ${tpl.example}` : 'Describe an outcome…';
 }
 
+const followDrafts = new Map(); // runId -> text
 const collapsed = new Set(); // newest run is open unless the user closed it
+
+const safeUrl = (u) => (/^https?:\/\//i.test(u) ? u : '#');
+const host = (u) => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return ''; } };
+
+const webSources = (st) => (st.sources || []).filter((x) => /^https?:\/\//i.test(x.url || ''));
+
+function followForm(r) {
+  const s = getState();
+  const ids = [...new Set(r.steps.map((st) => st.agentId))].filter((id) => s.agents.some((a) => a.id === id));
+  if (!ids.length) return '';
+  const last = [...r.steps].reverse().find((st) => st.output)?.agentId || ids[0];
+  const names = Object.fromEntries(s.agents.map((a) => [a.id, a.name]));
+  return `
+    <form class="follow-form" data-run="${r.id}">
+      <input name="follow" maxlength="4000" autocomplete="off" placeholder="Follow up…" aria-label="Follow-up for this run" value="${esc(followDrafts.get(r.id) || '')}">
+      ${ids.length > 1 ? `<select name="agent" class="pill-select" aria-label="Agent">${ids.map((id) => `<option value="${id}" ${id === last ? 'selected' : ''}>${esc(names[id])}</option>`).join('')}</select>` : `<input type="hidden" name="agent" value="${ids[0]}">`}
+      <button class="send sm-send" type="submit" aria-label="Send follow-up">
+        <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </form>`;
+}
 
 function runCard(r, index) {
   const open = (index === 0 && !collapsed.has(r.id)) || expanded.has(r.id) || r.status === 'awaiting_approval' || r.status === 'running';
@@ -46,18 +68,22 @@ function runCard(r, index) {
       <p class="run-task">${esc(r.task)}</p>
       <ol class="steps">
         ${r.steps.map((st, i) => `
+        ${st.prompt ? `<li class="run-task follow">${esc(st.prompt)}</li>` : ''}
         <li class="step ${esc(st.status)}">
           <div class="step-head"><strong>${esc(st.name)}</strong>
             <span class="muted small">${statusLabel[st.status]}${st.mode === 'demo' ? ' · demo' : st.mode === 'live' ? ' · live' : ''}</span>
             ${st.output && st.status !== 'running' ? `<button class="copy" data-action="copy" data-id="${r.id}" data-step="${i}" aria-label="Copy ${esc(st.name)}'s output">Copy</button>` : ''}</div>
+          ${st.status === 'running' && st.activity ? `<p class="activity small">${esc(st.activity)}</p>` : ''}
           ${st.status === 'running' && !st.output ? '<div class="typing" aria-label="Working"><span></span><span></span><span></span></div>' : ''}
           ${st.output ? `<div class="prose${st.status === 'running' ? ' streaming' : ''}" ${st.status === 'running' ? 'aria-live="polite" aria-busy="true"' : ''}>${md(st.output)}</div>` : ''}
+          ${webSources(st).length ? `<details class="sources"><summary class="small">${webSources(st).length} source${webSources(st).length > 1 ? 's' : ''}</summary><ol>${webSources(st).map((src) => `<li><a href="${esc(safeUrl(src.url))}" target="_blank" rel="noopener noreferrer">${esc(src.title || src.url)}</a> <span class="muted">${esc(host(src.url))}</span></li>`).join('')}</ol></details>` : ''}
         </li>`).join('')}
       </ol>
       ${r.error ? `<p class="error small">${esc(r.error)}</p>` : ''}
       ${needs ? `<div class="approval row gap"><span class="small">This agent asks for your approval before continuing.</span>
         <button class="btn primary sm" data-action="approve" data-id="${r.id}">Approve</button>
         <button class="btn sm" data-action="reject" data-id="${r.id}">Reject</button></div>` : ''}
+      ${['completed', 'failed', 'rejected', 'stopped'].includes(r.status) ? followForm(r) : ''}
       ${r.status === 'running' ? `<div class="row"><button class="btn sm" data-action="stop" data-id="${r.id}">
         <svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="2" fill="currentColor"/></svg> Stop</button></div>` : ''}
     </div>` : ''}
@@ -122,6 +148,7 @@ export function render() {
 
 export function bind(root, rerender) {
   root.addEventListener('input', (e) => {
+    if (e.target.name === 'follow') followDrafts.set(e.target.form.dataset.run, e.target.value);
     if (e.target.name === 'task') {
       taskDraft = e.target.value;
       e.target.style.height = 'auto';
@@ -138,6 +165,17 @@ export function bind(root, rerender) {
     }
   });
   root.addEventListener('submit', (e) => {
+    if (e.target.classList.contains('follow-form')) {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const text = String(fd.get('follow') || '').trim();
+      if (!text) return;
+      const runId = e.target.dataset.run;
+      const res = followUp(runId, text, String(fd.get('agent')));
+      if (res.error) { toast(res.error); return; }
+      followDrafts.delete(runId);
+      return;
+    }
     if (e.target.id !== 'run-form') return;
     e.preventDefault();
     const fd = new FormData(e.target);

@@ -61,7 +61,7 @@ const sleep = (ms, signal) => new Promise((resolve, reject) => {
 });
 
 // Reads the server's SSE stream, calling onText for each chunk.
-async function readStream(res, onText) {
+async function readStream(res, onText, onEvent) {
   const reader = res.body.getReader();
   const decoder = new TextDecoder();
   let buffer = '';
@@ -77,13 +77,14 @@ async function readStream(res, onText) {
       if (!line) continue;
       const evt = JSON.parse(line.slice(5).trim());
       if (evt.type === 'text') { full += evt.text; onText(full); }
+      else if (evt.type === 'status' || evt.type === 'sources') onEvent?.(evt);
       else if (evt.type === 'error') throw new Error(evt.error);
     }
   }
   return full;
 }
 
-async function callAgent(agent, task, previous, { signal, onText }) {
+async function callAgent(agent, task, previous, { signal, onText, onEvent }) {
   if (liveStatus !== false) {
     try {
       const res = await fetch(API_URL, {
@@ -107,7 +108,7 @@ async function callAgent(agent, task, previous, { signal, onText }) {
       } else {
         liveStatus = true;
         const output = (res.headers.get('content-type') || '').includes('text/event-stream')
-          ? await readStream(res, onText)
+          ? await readStream(res, onText, onEvent)
           : (await res.json()).output;
         return { output, mode: 'live' };
       }
@@ -177,6 +178,9 @@ async function advance(runId) {
   });
 
   const previous = idx > 0 ? run.steps[idx - 1].output : undefined;
+  const task = step.prompt
+    ? `Original task:\n${run.task}\n\nFollow-up request from the user (revise or extend your previous answer accordingly):\n${step.prompt}`
+    : run.task;
   const controller = new AbortController();
   controllers.set(runId, controller);
 
@@ -191,14 +195,23 @@ async function advance(runId) {
     mutateRun(runId, (r) => { if (r.steps[idx].status === 'running') r.steps[idx].output = text; });
   };
   const onText = (text) => { pending = text; if (!timer) timer = setTimeout(flush, 80); };
+  const onEvent = (evt) => mutateRun(runId, (r) => {
+    const st = r.steps[idx];
+    if (evt.type === 'status') st.activity = evt.text;
+    if (evt.type === 'sources') {
+      const seen = new Set((st.sources || []).map((x) => x.url));
+      st.sources = [...(st.sources || []), ...evt.sources.filter((x) => x.url && !seen.has(x.url))].slice(0, 12);
+    }
+  });
 
   try {
-    const { output, mode } = await callAgent(agent, run.task, previous, { signal: controller.signal, onText });
+    const { output, mode } = await callAgent(agent, task, previous, { signal: controller.signal, onText, onEvent });
     clearTimeout(timer);
     controllers.delete(runId);
     mutateRun(runId, (r) => {
       r.steps[idx].output = output;
       r.steps[idx].mode = mode;
+      r.steps[idx].activity = null;
       if (agent.approval) {
         r.steps[idx].status = 'awaiting_approval';
         r.status = 'awaiting_approval';
@@ -252,7 +265,8 @@ function complete(runId) {
     r.status = 'completed';
     r.verified = verified;
     r.finishedAt = Date.now();
-    if (!verified) return;
+    if (!verified || r.rewarded) return;
+    r.rewarded = true;
 
     const w = st.wallet;
     w.activity += REWARD_RULES.activityPerVerified;
@@ -268,6 +282,28 @@ function complete(runId) {
       addLedger({ kind: 'sclv', amount: reward, unit: '$SCLV', note: 'Capped reward for verified contribution' });
     }
   });
+}
+
+// Ask an agent in a finished run to revise or extend its answer.
+export function followUp(runId, prompt, agentId) {
+  const s = getState();
+  const run = s.runs.find((r) => r.id === runId);
+  if (!run) return { error: 'Run not found.' };
+  if (run.status === 'running' || run.status === 'awaiting_approval') return { error: 'Wait for the current step to finish.' };
+  const lastWithOutput = [...run.steps].reverse().find((st) => st.output);
+  const agent = findAgent(agentId || lastWithOutput?.agentId || run.steps[0].agentId);
+  if (!agent) return { error: 'That agent no longer exists.' };
+  if (s.wallet.creditsUsed + REWARD_RULES.creditsPerRun > plan().credits) {
+    return { error: `Not enough AI credits this month on the ${plan().label} plan.` };
+  }
+  mutateRun(runId, (r) => {
+    r.steps.push({ agentId: agent.id, name: agent.name, status: 'queued', output: '', mode: null, prompt });
+    r.current = r.steps.length - 1;
+    r.status = 'running';
+    r.error = null;
+  });
+  advance(runId);
+  return { ok: true };
 }
 
 export function clearFinished() {

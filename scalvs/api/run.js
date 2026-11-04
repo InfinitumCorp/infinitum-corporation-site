@@ -20,7 +20,11 @@ function clip(value, max) {
   return String(value ?? '').slice(0, max);
 }
 
-export function buildSystemPrompt(agent = {}, context = []) {
+const WEB_SEARCH_TOOL = () => process.env.SCALVS_WEB_SEARCH_TOOL || 'web_search_20250305';
+export const wantsWebSearch = (agent) => Array.isArray(agent?.tools) && agent.tools.includes('Web search')
+  && process.env.SCALVS_WEB_SEARCH !== 'off';
+
+export function buildSystemPrompt(agent = {}, context = [], webSearch = false) {
   const tools = Array.isArray(agent.tools) && agent.tools.length
     ? agent.tools.map((t) => `- ${clip(t, 60)}`).join('\n')
     : '- none';
@@ -32,7 +36,8 @@ export function buildSystemPrompt(agent = {}, context = []) {
     `You are "${clip(agent.name || 'Agent', 80)}", an AI agent running on SCALVS.ai, Infinitum's AI workforce platform.`,
     `Role: ${clip(agent.role || 'General assistant', 200)}.`,
     agent.instructions ? `Operator instructions:\n${clip(agent.instructions, 2000)}` : '',
-    `Connected tools (simulated in this prototype; describe what you would do with them, never claim an action already happened outside this answer):\n${tools}`,
+    webSearch ? 'You have a real web search tool. Use it when the task needs current or external facts, and cite what you found.' : '',
+    `Connected tools (other than web search these are simulated in this prototype; describe what you would do with them, never claim an action already happened outside this answer):\n${tools}`,
     `Context from the Nexus Context Vault (shared with permission):\n${memory}`,
     'Work style: start with a one-line plan, then deliver the finished work product. Be concrete and concise. Use short markdown headings and lists where helpful. If a step would need human approval (sending messages, spending money, publishing), stop and say what you would send for approval.',
   ].filter(Boolean).join('\n\n');
@@ -57,7 +62,7 @@ export async function POST(request) {
     : task;
 
   const stream = body.stream === true;
-  const upstream = await fetch(apiUrl(), {
+  const callModel = (webSearch) => fetch(apiUrl(), {
     method: 'POST',
     signal: request.signal,
     headers: {
@@ -67,12 +72,22 @@ export async function POST(request) {
     },
     body: JSON.stringify({
       model: process.env.SCALVS_MODEL || DEFAULT_MODEL,
-      max_tokens: 1500,
+      max_tokens: webSearch ? 3000 : 1500,
       stream,
-      system: buildSystemPrompt(body.agent, body.context),
+      system: buildSystemPrompt(body.agent, body.context, webSearch),
       messages: [{ role: 'user', content: userContent }],
+      ...(webSearch ? { tools: [{ type: WEB_SEARCH_TOOL(), name: 'web_search', max_uses: 3 }] } : {}),
     }),
   });
+
+  let webSearch = wantsWebSearch(body.agent);
+  let upstream = await callModel(webSearch);
+  // If web search isn't enabled for this API key/org, retry once without it.
+  if (!upstream.ok && webSearch && upstream.status === 400) {
+    await upstream.body?.cancel().catch(() => {});
+    webSearch = false;
+    upstream = await callModel(false);
+  }
 
   if (upstream.ok && stream) return relayStream(upstream);
 
@@ -119,6 +134,16 @@ export function relayStream(upstream) {
             try { data = JSON.parse(line.slice(5).trim()); } catch { continue; }
             if (data.type === 'content_block_delta' && data.delta?.type === 'text_delta') {
               send(controller, { type: 'text', text: data.delta.text });
+            } else if (data.type === 'content_block_delta' && data.delta?.type === 'citations_delta') {
+              const c = data.delta.citation;
+              if (c?.url) send(controller, { type: 'sources', sources: [{ url: c.url, title: c.title || '' }] });
+            } else if (data.type === 'content_block_start' && data.content_block?.type === 'server_tool_use') {
+              send(controller, { type: 'status', text: 'Searching the web…' });
+            } else if (data.type === 'content_block_start' && data.content_block?.type === 'web_search_tool_result') {
+              const results = Array.isArray(data.content_block.content) ? data.content_block.content : [];
+              const sources = results.filter((x) => x.type === 'web_search_result' && x.url).map((x) => ({ url: x.url, title: x.title || '' }));
+              if (sources.length) send(controller, { type: 'sources', sources });
+              send(controller, { type: 'status', text: 'Reading results…' });
             } else if (data.type === 'message_start') {
               Object.assign(usage, data.message?.usage || {});
             } else if (data.type === 'message_delta') {

@@ -1,4 +1,4 @@
-import { getState, update, addLedger, reset } from '../store.js';
+import { getState, update, addLedger } from '../store.js';
 import { PLANS, DATASETS, REWARD_RULES } from '../data.js';
 import { esc, fmt, ago, toast } from '../ui.js';
 
@@ -79,8 +79,7 @@ export function render() {
     </div>
     <p class="small muted">Switching plans here only changes prototype limits.</p>
   </section>
-
-  <p class="center"><button class="btn ghost sm" data-action="reset">Reset prototype data</button></p>`;
+`;
 }
 
 export function bind(root) {
@@ -114,8 +113,6 @@ export function bind(root) {
     } else if (action === 'plan') {
       update((st) => { st.plan = id; if (id !== 'free') st.wallet.adsOptIn = false; });
       toast(`Switched to ${PLANS[id].label}`);
-    } else if (action === 'reset') {
-      if (confirm('Reset all prototype data?')) { reset(); toast('Prototype reset'); }
     }
   });
 }
