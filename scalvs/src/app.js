@@ -11,8 +11,13 @@ const main = document.getElementById('main');
 let current = null;
 let root = null;
 
+import { consumeAuthRedirect, handleHashSignIn, initCloud, onCloud, cloudInfo } from './cloud.js';
+import { toast } from './ui.js';
+
+const authResult = consumeAuthRedirect();
+
 // Runs interrupted by a page reload can't resume.
-update((st) => {
+if (getState().runs.some((r) => r.status === 'running')) update((st) => {
   st.runs.forEach((r) => {
     if (r.status === 'running') {
       r.status = 'failed';
@@ -56,6 +61,12 @@ function renderNav() {
   badge.textContent = pending;
   badge.hidden = pending === 0;
   document.getElementById('plan-label').textContent = `${plan().label} plan`;
+  const c = cloudInfo();
+  document.getElementById('account-name').textContent = c.email || 'Infinitum';
+  const sync = document.getElementById('sync-dot');
+  sync.hidden = !c.configured || !c.email;
+  sync.className = `sync-dot ${c.status}`;
+  sync.title = { synced: 'Synced', syncing: 'Syncing…', error: c.error || 'Sync error' }[c.status] || '';
   document.getElementById('sclv-label').textContent = `${s.wallet.sclv} $SCLV`;
 }
 
@@ -73,7 +84,14 @@ function navigate() {
   renderView();
 }
 
-window.addEventListener('hashchange', navigate);
+window.addEventListener('hashchange', async () => {
+  if (/(^#|&)(access_token|error_description)=/.test(location.hash)) {
+    const r = await handleHashSignIn();
+    if (r?.error) toast(r.error);
+    else if (cloudInfo().email) toast(`Signed in as ${cloudInfo().email}`);
+  }
+  navigate();
+});
 subscribe(() => renderView());
 
 document.getElementById('menu-btn').addEventListener('click', () => document.body.classList.toggle('nav-open'));
@@ -81,3 +99,8 @@ document.getElementById('scrim').addEventListener('click', () => document.body.c
 
 navigate();
 checkLive().then(() => renderView());
+onCloud(() => renderView());
+initCloud().then(() => {
+  if (authResult?.error) toast(authResult.error);
+  else if (authResult?.signedIn && cloudInfo().email) toast(`Signed in as ${cloudInfo().email}`);
+});

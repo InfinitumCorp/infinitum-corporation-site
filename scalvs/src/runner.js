@@ -192,7 +192,7 @@ async function advance(runId) {
     if (pending == null) return;
     const text = pending;
     pending = null;
-    mutateRun(runId, (r) => { if (r.steps[idx].status === 'running') r.steps[idx].output = text; });
+    mutateRun(runId, (r) => { if (r.steps[idx].status === 'running') { r.steps[idx].output = text; r.steps[idx].activity = null; } });
   };
   const onText = (text) => { pending = text; if (!timer) timer = setTimeout(flush, 80); };
   const onEvent = (evt) => mutateRun(runId, (r) => {

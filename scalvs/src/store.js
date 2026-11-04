@@ -62,10 +62,12 @@ function persist() {
 
 export const getState = () => state;
 
+// Every local change bumps updatedAt; cloud sync uses it to decide direction.
 export function update(mutator) {
   mutator(state);
+  state.updatedAt = Date.now();
   persist();
-  listeners.forEach((fn) => fn(state));
+  listeners.forEach((fn) => fn(state, { local: true }));
 }
 
 export function subscribe(fn) {
@@ -73,16 +75,19 @@ export function subscribe(fn) {
   return () => listeners.delete(fn);
 }
 
-export function replaceState(next) {
+// fromCloud: applied from sync, so it must not be pushed back.
+export function replaceState(next, { fromCloud = false } = {}) {
   state = { ...seed(), ...next };
+  if (!fromCloud) state.updatedAt = Date.now();
   persist();
-  listeners.forEach((fn) => fn(state));
+  listeners.forEach((fn) => fn(state, { local: !fromCloud }));
 }
 
 export function reset() {
   state = seed();
+  state.updatedAt = Date.now();
   persist();
-  listeners.forEach((fn) => fn(state));
+  listeners.forEach((fn) => fn(state, { local: true }));
 }
 
 export const plan = () => PLANS[state.plan];

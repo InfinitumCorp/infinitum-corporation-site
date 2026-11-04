@@ -6,7 +6,6 @@ import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
 import { extname, join, normalize } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import * as api from './api/run.js';
 
 const ROOT = fileURLToPath(new URL('.', import.meta.url));
 const PORT = Number(process.env.PORT || 3000);
@@ -18,8 +17,11 @@ const TYPES = {
 createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`);
   try {
-    if (url.pathname === '/api/run') {
-      const handler = api[req.method];
+    const apiMatch = url.pathname.match(/^\/api\/([a-z0-9-]+)$/);
+    if (apiMatch) {
+      let mod;
+      try { mod = await import(`./api/${apiMatch[1]}.js`); } catch { res.writeHead(404).end(); return; }
+      const handler = mod[req.method];
       if (!handler) { res.writeHead(405).end(); return; }
       const chunks = [];
       for await (const c of req) chunks.push(c);
