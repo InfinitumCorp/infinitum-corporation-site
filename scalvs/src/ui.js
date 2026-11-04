@@ -49,6 +49,14 @@ export function md(src) {
   return out.join('');
 }
 
+export function until(ts) {
+  const s = Math.round((ts - Date.now()) / 1000);
+  if (s <= 60) return 'in under a minute';
+  if (s < 3600) return `in ${Math.round(s / 60)}m`;
+  if (s < 86400) return `in ${Math.round(s / 3600)}h`;
+  return `in ${Math.round(s / 86400)}d`;
+}
+
 export const statusLabel = {
   queued: 'Queued', running: 'Running', awaiting_approval: 'Needs approval',
   done: 'Done', completed: 'Completed', failed: 'Failed', rejected: 'Rejected', stopped: 'Stopped',

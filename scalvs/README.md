@@ -6,9 +6,9 @@ This is the first working prototype of the four-step flow from the [product page
 
 | Step | Screen | What works |
 |---|---|---|
-| 01 Create | **Agent Studio** | Six templates (Researcher, Writer, Coder, Sales rep, Operator, Support); name, role, instructions, tools, Context Vault, approval and schedule per agent; plan-based agent limits; multi-agent **teams** run in sequence (/CNDCTR/-style), each agent building on the previous output. |
+| 01 Create | **Agent Studio** | Six templates (Researcher, Writer, Coder, Sales rep, Operator, Support); name, role, instructions, tools, Context Vault, approval and schedule and standing task per agent; plan-based agent limits; multi-agent **teams** run in sequence (/CNDCTR/-style), each agent building on the previous output. |
 | 02 Connect | **Connect** | Toggle connections to your apps and Infinitum products (simulated); **Nexus Context Vault** entries with per-product permissions that agents read when memory is on. |
-| 03 Run | **Command Center** | Chat-style composer to give an agent or team a task; agent output **streams in live**; **Stop** a running task; **human approval** gates; copy any agent's output; **follow up** on a finished run to have an agent revise its answer; agents with the Web search tool **search the web** (live mode) and show their sources; AI-credit meter per plan; schedules list. |
+| 03 Run | **Command Center** | Chat-style composer to give an agent or team a task, with **file attachments** (text files inline; PDFs and images sent to Claude natively, 5 files / 3 MB); agent output **streams in live**; **Stop** a running task; **human approval** gates; copy any agent's output; **follow up** on a finished run to have an agent revise its answer; agents with the Web search tool **search the web** (live mode) and show their sources; AI-credit meter per plan; **scheduled agents** run their standing task hourly, daily or weekly while the app is open (one catch-up run on open, never replayed). |
 | — | **Settings** | Runtime status; **cloud sync** (email sign-in link, workspace syncs across devices); **export / import** the whole workspace as JSON; reset. |
 | 04 Earn | **Earnings & Data Wallet** | Activity credits and capped **$SCLV** rewards on verified runs, ad revenue share opt-in (Free plan), data licensing with an 85% share, ledger, plan switcher. |
 
@@ -54,7 +54,8 @@ Import the repo in Vercel and set **Root Directory** to `scalvs` (framework pres
 index.html            app shell + sidebar
 src/app.js            hash router, re-rendering
 src/store.js          localStorage state (agents, teams, runs, vault, wallet)
-src/runner.js         run lifecycle: sequencing, approvals, credits, rewards
+src/runner.js         run lifecycle: sequencing, approvals, credits, rewards, attachments
+src/scheduler.js      runs scheduled agents' standing tasks when due
 src/data.js           templates, plans, connectors, reward rules
 src/views/*.js        command, studio, connect, earnings, settings
 src/styles.css        clean white UI
@@ -69,7 +70,7 @@ dev-server.mjs        zero-dependency local server
 
 - Team workspaces (shared agents and approvals between colleagues)
 - Real connectors (email, Slack, GitHub) behind OAuth, with approvals enforced server-side
-- Server-side scheduler for scheduled agents
+- Server-side scheduler (Vercel Cron + the cloud workspace) so schedules run with the app closed
 - More real tools (files, email drafts) with per-tool approval
 
 © 2026 Infinitum Corporation

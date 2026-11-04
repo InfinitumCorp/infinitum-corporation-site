@@ -60,6 +60,10 @@ function editor() {
           ${['none', 'hourly', 'daily', 'weekly'].map((s) => `<option value="${s}" ${draft.schedule === s ? 'selected' : ''}>${s === 'none' ? 'On demand' : s[0].toUpperCase() + s.slice(1)}</option>`).join('')}
         </select>
       </label>
+      <label class="standing ${draft.schedule === 'none' ? 'is-hidden' : ''}">Standing task
+        <textarea name="standingTask" rows="2" maxlength="2000" placeholder="What should ${esc(draft.name || 'this agent')} do each time it runs? e.g. Summarize new support tickets and flag urgent ones.">${esc(draft.standingTask || '')}</textarea>
+        <span class="muted small">Runs automatically while SCALVS.ai is open in a browser.</span>
+      </label>
       <div class="row gap"><button class="btn primary" type="submit">${draft.id ? 'Save changes' : 'Create agent'}</button></div>
     </form>
   </section>`;
@@ -171,6 +175,10 @@ export function bind(root, rerender) {
     }
   });
 
+  root.addEventListener('change', (e) => {
+    if (e.target.name === 'schedule') root.querySelector('.standing')?.classList.toggle('is-hidden', e.target.value === 'none');
+  });
+
   root.addEventListener('submit', (e) => {
     e.preventDefault();
     const form = e.target;
@@ -185,7 +193,14 @@ export function bind(root, rerender) {
         memory: fd.get('memory') === 'on',
         approval: fd.get('approval') === 'on',
         schedule: fd.get('schedule'),
+        standingTask: String(fd.get('standingTask') || '').trim(),
       };
+      if (data.schedule !== 'none' && !data.standingTask) { toast('Add a standing task for the schedule'); return; }
+      // A new or changed schedule starts its clock now.
+      // (draft still holds the saved values; the form holds the new ones.)
+      if (data.schedule !== (draft.schedule || 'none') || data.standingTask !== (draft.standingTask || '')) {
+        data.lastScheduledAt = data.schedule === 'none' ? null : Date.now();
+      }
       const isNew = !data.id;
       draft = null;
       update((st) => {

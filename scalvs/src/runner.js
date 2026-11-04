@@ -7,6 +7,9 @@ import { REWARD_RULES, TEMPLATES } from './data.js';
 let liveStatus = null; // null = unknown, true = live model, false = demo
 const API_URL = 'api/run';
 const controllers = new Map(); // runId -> AbortController
+// Attachment contents stay in memory only (localStorage is too small for files).
+const runFiles = new Map(); // runId -> [{ name, type, text? , data? }]
+export const hasFiles = (runId) => runFiles.has(runId);
 
 export async function checkLive() {
   try {
@@ -36,10 +39,11 @@ function vaultFor(agent) {
 }
 
 // ---------- demo runner (no API key) ----------
-function demoOutput(agent, task, previous) {
+function demoOutput(agent, task, previous, files = []) {
   const tpl = TEMPLATES.find((t) => t.id === agent.template) || TEMPLATES[0];
   const short = task.length > 90 ? `${task.slice(0, 87)}…` : task;
-  const base = previous ? `Building on the previous agent's draft.\n\n` : '';
+  const base = (previous ? `Building on the previous agent's draft.\n\n` : '')
+    + (files.length ? `Read ${files.length} attached file${files.length > 1 ? 's' : ''}: ${files.map((f) => f.name).join(', ')}.\n\n` : '');
   const plans = {
     research: ['Define the question and criteria', 'Collect and compare sources', 'Summarize findings with confidence levels'],
     writer: ['Identify audience and goal', 'Outline the key points', 'Draft, then tighten to the house voice'],
@@ -84,7 +88,7 @@ async function readStream(res, onText, onEvent) {
   return full;
 }
 
-async function callAgent(agent, task, previous, { signal, onText, onEvent }) {
+async function callAgent(agent, task, previous, { signal, onText, onEvent, files = [] }) {
   if (liveStatus !== false) {
     try {
       const res = await fetch(API_URL, {
@@ -96,6 +100,7 @@ async function callAgent(agent, task, previous, { signal, onText, onEvent }) {
           context: vaultFor(agent),
           task,
           previous,
+          attachments: files.length ? files : undefined,
           stream: true,
         }),
       });
@@ -119,7 +124,7 @@ async function callAgent(agent, task, previous, { signal, onText, onEvent }) {
   }
   // Demo mode: stream a simulated answer word by word.
   await sleep(400 + Math.random() * 400, signal);
-  const text = demoOutput(agent, task, previous);
+  const text = demoOutput(agent, task, previous, files);
   const words = text.split(/(\s+)/);
   let out = '';
   for (let i = 0; i < words.length; i += 6) {
@@ -131,7 +136,7 @@ async function callAgent(agent, task, previous, { signal, onText, onEvent }) {
 }
 
 // ---------- run lifecycle ----------
-export function startRun({ task, agentIds, title }) {
+export function startRun({ task, agentIds, title, attachments = [] }) {
   const s = getState();
   const steps = agentIds.map(findAgent).filter(Boolean);
   if (!steps.length) return { error: 'Choose an agent or team.' };
@@ -147,7 +152,9 @@ export function startRun({ task, agentIds, title }) {
     createdAt: Date.now(),
     current: 0,
     steps: steps.map((a) => ({ agentId: a.id, name: a.name, status: 'queued', output: '', mode: null })),
+    files: attachments.map((f) => ({ name: f.name, type: f.type, size: f.size })),
   };
+  if (attachments.length) runFiles.set(run.id, attachments.map(({ name, type, text, data }) => ({ name, type, text, data })));
   update((st) => { st.runs.unshift(run); st.runs = st.runs.slice(0, 40); });
   advance(run.id);
   return { run };
@@ -205,7 +212,7 @@ async function advance(runId) {
   });
 
   try {
-    const { output, mode } = await callAgent(agent, task, previous, { signal: controller.signal, onText, onEvent });
+    const { output, mode } = await callAgent(agent, task, previous, { signal: controller.signal, onText, onEvent, files: runFiles.get(runId) || [] });
     clearTimeout(timer);
     controllers.delete(runId);
     mutateRun(runId, (r) => {
@@ -307,5 +314,6 @@ export function followUp(runId, prompt, agentId) {
 }
 
 export function clearFinished() {
+  getState().runs.forEach((r) => { if (!['running', 'awaiting_approval'].includes(r.status)) runFiles.delete(r.id); });
   update((st) => { st.runs = st.runs.filter((r) => r.status === 'running' || r.status === 'awaiting_approval'); });
 }

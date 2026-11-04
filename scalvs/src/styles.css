@@ -309,3 +309,16 @@ button.chip:hover { border-color: var(--line); }
 .sync-dot.error { background: var(--err); }
 .sync-dot[hidden] { display: none; }
 .panel code { background: var(--soft); border-radius: 5px; padding: 1px 5px; font-size: 12.5px; }
+
+/* attachments */
+.attach { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; color: var(--muted); cursor: pointer; flex: none; }
+.attach:hover { background: var(--soft); color: var(--ink); }
+.attach:focus-within { outline: 2px solid var(--ink); outline-offset: 1px; }
+.composer.drop { border-color: var(--ink); background: #fafafa; }
+.file-chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 2px 0 6px; }
+.file-chip { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; padding: 5px 6px 5px 10px; border: 1px solid var(--line); border-radius: 10px; background: #fff; max-width: 100%; }
+.chip-x { border: 0; background: none; width: 20px; height: 20px; border-radius: 50%; cursor: pointer; color: var(--muted); font-size: 15px; line-height: 1; }
+.chip-x:hover { background: var(--soft); color: var(--ink); }
+.run-files { display: flex; justify-content: flex-end; margin: -8px 0 12px; }
+.is-hidden { display: none !important; }
+.standing .small { font-weight: 400; }

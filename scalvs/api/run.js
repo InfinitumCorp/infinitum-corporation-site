@@ -24,6 +24,33 @@ const WEB_SEARCH_TOOL = () => process.env.SCALVS_WEB_SEARCH_TOOL || 'web_search_
 export const wantsWebSearch = (agent) => Array.isArray(agent?.tools) && agent.tools.includes('Web search')
   && process.env.SCALVS_WEB_SEARCH !== 'off';
 
+// ---------- attachments ----------
+export const ATTACHMENT_LIMITS = { files: 5, textChars: 200_000, binaryBytes: 3_000_000 };
+const BINARY_TYPES = { 'application/pdf': 'document', 'image/png': 'image', 'image/jpeg': 'image', 'image/gif': 'image', 'image/webp': 'image' };
+
+// Returns { blocks } with Claude content blocks, or { error }.
+export function attachmentBlocks(list) {
+  if (list == null) return { blocks: [] };
+  if (!Array.isArray(list)) return { error: 'attachments must be an array' };
+  if (list.length > ATTACHMENT_LIMITS.files) return { error: `At most ${ATTACHMENT_LIMITS.files} files per task` };
+  const blocks = [];
+  let binary = 0;
+  for (const f of list) {
+    const name = clip(f?.name || 'file', 120).replace(/[<>"]/g, '');
+    if (typeof f?.text === 'string') {
+      blocks.push({ type: 'text', text: `<file name="${name}">\n${clip(f.text, ATTACHMENT_LIMITS.textChars)}\n</file>` });
+      continue;
+    }
+    const kind = BINARY_TYPES[f?.type];
+    if (!kind || typeof f?.data !== 'string' || !/^[A-Za-z0-9+/=]+$/.test(f.data)) return { error: `Unsupported file: ${name}` };
+    binary += Math.floor(f.data.length * 0.75);
+    if (binary > ATTACHMENT_LIMITS.binaryBytes) return { error: 'Attachments are too large (3 MB max for PDFs and images)' };
+    const source = { type: 'base64', media_type: f.type, data: f.data };
+    blocks.push(kind === 'document' ? { type: 'document', source, title: name } : { type: 'image', source });
+  }
+  return { blocks };
+}
+
 export function buildSystemPrompt(agent = {}, context = [], webSearch = false) {
   const tools = Array.isArray(agent.tools) && agent.tools.length
     ? agent.tools.map((t) => `- ${clip(t, 60)}`).join('\n')
@@ -57,9 +84,14 @@ export async function POST(request) {
   const task = clip(body?.task, MAX_TASK_CHARS).trim();
   if (!task) return json({ error: 'Missing task' }, 400);
 
-  const userContent = body.previous
+  const { blocks: files, error: fileError } = attachmentBlocks(body.attachments);
+  if (fileError) return json({ error: fileError }, 400);
+  const taskText = body.previous
     ? `Task:\n${task}\n\nOutput from the previous agent in this team, to build on:\n${clip(body.previous, 8000)}`
     : task;
+  const userContent = files.length
+    ? [...files, { type: 'text', text: `${taskText}\n\n(${files.length} attached file${files.length > 1 ? 's' : ''} above.)` }]
+    : taskText;
 
   const stream = body.stream === true;
   const callModel = (webSearch) => fetch(apiUrl(), {

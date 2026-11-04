@@ -13,6 +13,7 @@ let root = null;
 
 import { consumeAuthRedirect, handleHashSignIn, initCloud, onCloud, cloudInfo } from './cloud.js';
 import { toast } from './ui.js';
+import { startScheduler } from './scheduler.js';
 
 const authResult = consumeAuthRedirect();
 
@@ -101,6 +102,7 @@ navigate();
 checkLive().then(() => renderView());
 onCloud(() => renderView());
 initCloud().then(() => {
+  startScheduler();
   if (authResult?.error) toast(authResult.error);
   else if (authResult?.signedIn && cloudInfo().email) toast(`Signed in as ${cloudInfo().email}`);
 });
