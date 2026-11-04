@@ -1,29 +1,31 @@
-# Infinitum Corporation Product Titles with ™
+# Infinitum Corporation — Product Titles with ™
 
-Extracted from https://infinitum-corporation.vercel.app/#products
+> Source: [infinitum-corporation.vercel.app/#products](https://infinitum-corporation.vercel.app/#products)
 
-These are the product titles as displayed on the website, each with the trademark symbol (™):
+All product titles as displayed on the website, each carrying the trademark symbol (™):
 
-- /CNDCTR/™
-- SCALVS.ai™
-- Flower™
-- NEMESIS™
-- ORBIS™
-- POLLEN™
-- FIRM™ & FIRM Wallet™
-- Firmament Network™
-- Cumulus://Cloud™
-- #THRONE™
-- ÆTHER™
-- E(O)N™
-- FABRIC™
-- VEIL</>™
-- >_ARGUS™
-- ei·det·ic™
-- [HRVST]™
-- METATRON¹⁰⁰™
-- +SPCTR™ (Spectre)
-- ODIN°™
-- FIRM Wallet™
+| # | Title |
+|---|-------|
+| 1 | /CNDCTR/™ |
+| 2 | SCALVS.ai™ |
+| 3 | Flower™ |
+| 4 | NEMESIS™ |
+| 5 | ORBIS™ |
+| 6 | POLLEN™ |
+| 7 | FIRM™ & FIRM Wallet™ |
+| 8 | Firmament Network™ |
+| 9 | Cumulus://Cloud™ |
+| 10 | #THRONE™ |
+| 11 | ÆTHER™ |
+| 12 | E(O)N™ |
+| 13 | FABRIC™ |
+| 14 | VEIL</>™ |
+| 15 | >_ARGUS™ |
+| 16 | ei·det·ic™ |
+| 17 | [HRVST]™ |
+| 18 | METATRON¹⁰⁰™ |
+| 19 | +SPCTR™ (Spectre) |
+| 20 | ODIN°™ |
+| 21 | FIRM Wallet™ |
 
-All titles use the ™ symbol as shown on the live site.
+These titles are used exactly as they appear on the live site (including special characters and the ™ mark).
