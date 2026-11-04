@@ -1,6 +1,6 @@
 import { getState, plan } from '../store.js';
 import { TEMPLATES, REWARD_RULES } from '../data.js';
-import { startRun, approve, reject, clearFinished, isLive } from '../runner.js';
+import { startRun, approve, reject, clearFinished, isLive, creditUsage } from '../runner.js';
 import { esc, md, ago, fmt, statusLabel, toast } from '../ui.js';
 
 let target = null;   // "agent:<id>" | "team:<id>"
@@ -35,7 +35,7 @@ function runCard(r) {
   return `
   <article class="run ${esc(r.status)}">
     <button class="run-head" data-action="toggle-run" data-id="${r.id}" aria-expanded="${open}">
-      <span class="status-pill ${esc(r.status)}">${statusLabel[r.status]}${r.verified ? ' · verified' : ''}</span>
+      <span class="status-pill ${esc(r.status)}">${statusLabel[r.status]}${r.steps.some(s => s.mode === 'demo') ? ' · demo' : ''}</span>
       <span class="run-title">${esc(r.title)}</span>
       <span class="muted small">${ago(r.createdAt)}</span>
     </button>
@@ -64,6 +64,7 @@ export function render() {
   const s = getState();
   const p = plan();
   const used = s.wallet.creditsUsed;
+  const usage = creditUsage();
   const pct = Math.min(100, (used / p.credits) * 100);
   const approvals = s.runs.filter((r) => r.status === 'awaiting_approval');
   const active = s.runs.filter((r) => r.status === 'running').length;
@@ -73,6 +74,7 @@ export function render() {
   return `
   <section class="hero">
     <h1 class="hero-title">What should your agents do?</h1>
+    <p class="small muted" role="status">${live === true ? 'Live AI drafts. App connections are simulated; external actions and contribution rewards are not verified.' : live === false ? 'Demo mode: outputs and connections are simulated. Tasks do not earn tokens.' : 'Checking AI availability…'}</p>
     <form id="run-form" class="composer">
       <textarea name="task" rows="2" maxlength="6000" required placeholder="${esc(exampleFor())}" aria-label="Task">${esc(taskDraft)}</textarea>
       <div class="composer-bar">
@@ -97,6 +99,7 @@ export function render() {
       <div class="row between"><span class="muted small">AI credits this month</span><span class="small">${fmt(used)} / ${fmt(p.credits)}</span></div>
       <div class="meter" role="progressbar" aria-valuenow="${used}" aria-valuemin="0" aria-valuemax="${p.credits}"><span style="width:${pct}%"></span></div>
       <span class="muted small">${REWARD_RULES.creditsPerRun} credits per agent step · ${p.label} plan</span>
+      <span class="muted small">${fmt(usage.reserved)} reserved · ${fmt(usage.available)} available · resets monthly (UTC)</span>
     </div>
   </div>
 
@@ -157,3 +160,4 @@ export function bind(root, rerender) {
     else if (action === 'clear') clearFinished();
   });
 }
+
