@@ -16,9 +16,9 @@ This is the first working prototype of the four-step flow from the [product page
 
 ## Live vs demo mode
 
-Agent steps run through `api/run.js`, a Vercel serverless function that calls the Claude Messages API.
+Agent steps run through `functions/api/run.js`, a Cloudflare Pages Function that calls the Claude Messages API.
 
-- **Live:** set `ANTHROPIC_API_KEY` in the Vercel project (optionally `SCALVS_MODEL`, default `claude-sonnet-5-5`, and `ANTHROPIC_BASE_URL` for a gateway). Agents then produce real work, streamed token by token. Agents with **Web search** use Claude's web search tool (`SCALVS_WEB_SEARCH_TOOL`, default `web_search_20250305`; set `SCALVS_WEB_SEARCH=off` to disable). If web search isn't enabled for your API key, the request is retried without it.
+- **Live:** add `ANTHROPIC_API_KEY` as a secret in the Cloudflare Pages project (optionally `SCALVS_MODEL`, default `claude-sonnet-5-5`, and `ANTHROPIC_BASE_URL` for a gateway). Agents then produce real work, streamed token by token. Agents with **Web search** use Claude's web search tool (`SCALVS_WEB_SEARCH_TOOL`, default `web_search_20250305`; set `SCALVS_WEB_SEARCH=off` to disable). If web search isn't enabled for your API key, the request is retried without it.
 - **Demo:** with no key the function answers `503` and the app falls back to simulated agent output, so everything still works end to end.
 
 The composer shows which mode is active.
@@ -30,7 +30,7 @@ Without configuration the workspace lives in one browser. To sync it across devi
 1. Create a Supabase project.
 2. Run `supabase/migrations/0001_workspaces.sql` in its SQL editor. It creates `public.workspaces` (one JSON document per user) with row level security so each user can only read and write their own row.
 3. In Supabase → Authentication → URL Configuration, set the Site URL to your deployment and add it to the redirect allow list.
-4. Add `SUPABASE_URL` and `SUPABASE_ANON_KEY` (the public anon key) to the Vercel project.
+4. Add `SUPABASE_URL` and `SUPABASE_ANON_KEY` (the public anon key) as variables in the Cloudflare Pages project.
 
 Users then sign in from **Settings → Cloud sync** with an emailed link. Changes push automatically about 1.5 s after they happen and are pulled when the tab regains focus. On a device that already has its own work, the first sign-in asks whether to load the cloud workspace or upload the local one. After that, sync is last-write-wins.
 
@@ -44,33 +44,54 @@ npm run dev                                  # demo mode, http://localhost:3000
 ANTHROPIC_API_KEY=sk-ant-... npm run dev     # live mode
 ```
 
+`npm run dev` mimics Cloudflare Pages with no dependencies. To run on the real Workers runtime instead, put your variables in `.dev.vars` (copy `.env.example`) and run `npm run cf:dev` (uses Wrangler).
+
 ## Deploy
 
-Import the repo in Vercel and set **Root Directory** to `scalvs` (framework preset: **Other**, no build command). Static files are served as-is and `api/run.js` becomes `/api/run`. All paths are relative, so the static app also works from any subfolder (it falls back to demo mode where `/api/run` isn't deployed).
+Cloudflare Pages, no build step.
+
+**From the dashboard (Git integration):** Workers & Pages → Create → Pages → Connect to Git → pick the repo, then set:
+
+| Setting | Value |
+|---|---|
+| Root directory | `scalvs` |
+| Framework preset | None |
+| Build command | *(empty)* |
+| Build output directory | `public` |
+
+Then add variables under **Settings → Variables and Secrets** (`ANTHROPIC_API_KEY` as a secret; optionally `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SCALVS_MODEL`) and redeploy. `functions/api/run.js` serves `/api/run` and `functions/api/config.js` serves `/api/config`; `public/_headers` sets security headers.
+
+**From the command line:** `cd scalvs && npm run deploy` (Wrangler, uses `wrangler.toml`), then `npx wrangler pages secret put ANTHROPIC_API_KEY`.
+
+All app paths are relative, so the static app also works from a subfolder; it falls back to demo mode where `/api/run` isn't deployed.
 
 ## Structure
 
 ```
-index.html            app shell + sidebar
-src/app.js            hash router, re-rendering
-src/store.js          localStorage state (agents, teams, runs, vault, wallet)
-src/runner.js         run lifecycle: sequencing, approvals, credits, rewards, attachments
-src/scheduler.js      runs scheduled agents' standing tasks when due
-src/data.js           templates, plans, connectors, reward rules
-src/views/*.js        command, studio, connect, earnings, settings
-src/styles.css        clean white UI
-api/run.js            Claude-backed agent step (Vercel function)
-api/config.js         public client config (Supabase URL + anon key)
-src/cloud.js          sign-in link, session refresh, workspace sync
-supabase/migrations/  database schema + row level security
-dev-server.mjs        zero-dependency local server
+public/                      static site (Cloudflare Pages output directory)
+  index.html                 app shell + sidebar
+  _headers                   security headers
+  src/app.js                 hash router, re-rendering
+  src/store.js               localStorage state (agents, teams, runs, vault, wallet)
+  src/runner.js              run lifecycle: sequencing, approvals, credits, rewards, attachments
+  src/scheduler.js           runs scheduled agents' standing tasks when due
+  src/cloud.js               sign-in link, session refresh, workspace sync
+  src/data.js                templates, plans, connectors, reward rules
+  src/views/*.js             command, studio, connect, earnings, settings
+  src/styles.css             clean white UI
+functions/api/run.js         Claude-backed agent step (Pages Function)
+functions/api/config.js      public client config (Supabase URL + anon key)
+supabase/migrations/         database schema + row level security
+wrangler.toml                Cloudflare Pages config
+dev-server.mjs               zero-dependency local server (mimics Pages)
 ```
 
 ## Next steps
 
 - Team workspaces (shared agents and approvals between colleagues)
 - Real connectors (email, Slack, GitHub) behind OAuth, with approvals enforced server-side
-- Server-side scheduler (Vercel Cron + the cloud workspace) so schedules run with the app closed
+- Server-side scheduler (a Cloudflare Worker Cron Trigger + the cloud workspace) so schedules run with the app closed
+- Per-user usage limits enforced on the server before sharing a live link
 - More real tools (files, email drafts) with per-tool approval
 
 © 2026 Infinitum Corporation

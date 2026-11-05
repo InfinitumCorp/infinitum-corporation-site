@@ -2,11 +2,15 @@
   "name": "scalvs-ai",
   "version": "0.1.0",
   "private": true,
-  "description": "SCALVS.ai — Infinitum's AI workforce platform (prototype)",
+  "description": "SCALVS.ai \u2014 Infinitum's AI workforce platform (prototype)",
   "type": "module",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "node dev-server.mjs",
-    "check": "node --check api/run.js && for f in src/*.js src/views/*.js; do node --check $f || exit 1; done"
+    "cf:dev": "npx wrangler pages dev",
+    "deploy": "npx wrangler pages deploy",
+    "check": "for f in functions/api/*.js public/src/*.js public/src/views/*.js dev-server.mjs; do node --check $f || exit 1; done"
   }
 }

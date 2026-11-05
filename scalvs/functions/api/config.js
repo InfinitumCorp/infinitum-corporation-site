@@ -6,9 +6,11 @@ function json(body) {
   });
 }
 
-export function GET() {
-  const url = process.env.SUPABASE_URL;
-  const anonKey = process.env.SUPABASE_ANON_KEY;
+export function GET(request, env = {}) {
+  const url = env.SUPABASE_URL;
+  const anonKey = env.SUPABASE_ANON_KEY;
   if (!url || !anonKey) return json({ cloud: false });
   return json({ cloud: true, supabaseUrl: url.replace(/\/$/, ''), supabaseAnonKey: anonKey });
 }
+
+export const onRequestGet = ({ request, env }) => GET(request, env);

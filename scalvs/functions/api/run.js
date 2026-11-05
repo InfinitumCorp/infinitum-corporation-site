@@ -1,11 +1,11 @@
-// SCALVS.ai agent runtime — Vercel serverless function.
+// SCALVS.ai agent runtime — Cloudflare Pages Function (route: /api/run).
 // POST /api/run  { agent, task, context?, previous? }  ->  { mode, output, usage }
 //
 // Runs one agent step against the Claude Messages API using ANTHROPIC_API_KEY.
 // When no key is configured it answers 503 { mode: "demo" } and the client
 // falls back to its built-in simulated runner, so the prototype still works.
 
-const apiUrl = () => `${(process.env.ANTHROPIC_BASE_URL || 'https://api.anthropic.com').replace(/\/$/, '')}/v1/messages`;
+const apiUrl = (env) => `${(env.ANTHROPIC_BASE_URL || 'https://api.anthropic.com').replace(/\/$/, '')}/v1/messages`;
 const DEFAULT_MODEL = 'claude-sonnet-5-5';
 const MAX_TASK_CHARS = 6000;
 
@@ -20,9 +20,9 @@ function clip(value, max) {
   return String(value ?? '').slice(0, max);
 }
 
-const WEB_SEARCH_TOOL = () => process.env.SCALVS_WEB_SEARCH_TOOL || 'web_search_20250305';
-export const wantsWebSearch = (agent) => Array.isArray(agent?.tools) && agent.tools.includes('Web search')
-  && process.env.SCALVS_WEB_SEARCH !== 'off';
+const WEB_SEARCH_TOOL = (env) => env.SCALVS_WEB_SEARCH_TOOL || 'web_search_20250305';
+export const wantsWebSearch = (agent, env = {}) => Array.isArray(agent?.tools) && agent.tools.includes('Web search')
+  && env.SCALVS_WEB_SEARCH !== 'off';
 
 // ---------- attachments ----------
 export const ATTACHMENT_LIMITS = { files: 5, textChars: 200_000, binaryBytes: 3_000_000 };
@@ -70,8 +70,8 @@ export function buildSystemPrompt(agent = {}, context = [], webSearch = false) {
   ].filter(Boolean).join('\n\n');
 }
 
-export async function POST(request) {
-  const key = process.env.ANTHROPIC_API_KEY;
+export async function POST(request, env = {}) {
+  const key = env.ANTHROPIC_API_KEY;
   if (!key) return json({ mode: 'demo', error: 'ANTHROPIC_API_KEY is not configured' }, 503);
 
   let body;
@@ -94,7 +94,7 @@ export async function POST(request) {
     : taskText;
 
   const stream = body.stream === true;
-  const callModel = (webSearch) => fetch(apiUrl(), {
+  const callModel = (webSearch) => fetch(apiUrl(env), {
     method: 'POST',
     signal: request.signal,
     headers: {
@@ -103,16 +103,16 @@ export async function POST(request) {
       'anthropic-version': '2023-06-01',
     },
     body: JSON.stringify({
-      model: process.env.SCALVS_MODEL || DEFAULT_MODEL,
+      model: env.SCALVS_MODEL || DEFAULT_MODEL,
       max_tokens: webSearch ? 3000 : 1500,
       stream,
       system: buildSystemPrompt(body.agent, body.context, webSearch),
       messages: [{ role: 'user', content: userContent }],
-      ...(webSearch ? { tools: [{ type: WEB_SEARCH_TOOL(), name: 'web_search', max_uses: 3 }] } : {}),
+      ...(webSearch ? { tools: [{ type: WEB_SEARCH_TOOL(env), name: 'web_search', max_uses: 3 }] } : {}),
     }),
   });
 
-  let webSearch = wantsWebSearch(body.agent);
+  let webSearch = wantsWebSearch(body.agent, env);
   let upstream = await callModel(webSearch);
   // If web search isn't enabled for this API key/org, retry once without it.
   if (!upstream.ok && webSearch && upstream.status === 400) {
@@ -200,6 +200,10 @@ export function relayStream(upstream) {
   });
 }
 
-export function GET() {
-  return json({ ok: true, live: Boolean(process.env.ANTHROPIC_API_KEY) });
+export function GET(request, env = {}) {
+  return json({ ok: true, live: Boolean(env.ANTHROPIC_API_KEY) });
 }
+
+// Cloudflare Pages Functions entry points (secrets come from context.env).
+export const onRequestPost = ({ request, env }) => POST(request, env);
+export const onRequestGet = ({ request, env }) => GET(request, env);

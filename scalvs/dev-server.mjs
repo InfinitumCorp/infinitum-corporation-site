@@ -1,13 +1,14 @@
-// Zero-dependency local dev server: serves static files and runs /api/run
-// the same way Vercel does (Web-standard Request -> Response handlers).
+// Zero-dependency local dev server that mimics Cloudflare Pages:
+// serves public/ and runs functions/api/<name>.js (onRequest<Method>).
 // Usage: ANTHROPIC_API_KEY=sk-... node dev-server.mjs   (key optional)
+// With Wrangler installed you can use `npx wrangler pages dev` instead.
 
 import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
 import { extname, join, normalize } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const ROOT = fileURLToPath(new URL('.', import.meta.url));
+const ROOT = fileURLToPath(new URL('./public/', import.meta.url));
 const PORT = Number(process.env.PORT || 3000);
 const TYPES = {
   '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8',
@@ -20,15 +21,16 @@ createServer(async (req, res) => {
     const apiMatch = url.pathname.match(/^\/api\/([a-z0-9-]+)$/);
     if (apiMatch) {
       let mod;
-      try { mod = await import(`./api/${apiMatch[1]}.js`); } catch { res.writeHead(404).end(); return; }
-      const handler = mod[req.method];
-      if (!handler) { res.writeHead(405).end(); return; }
+      try { mod = await import(`./functions/api/${apiMatch[1]}.js`); } catch { res.writeHead(404).end(); return; }
+      const method = req.method[0] + req.method.slice(1).toLowerCase();
+      const fn = mod[`onRequest${method}`] || mod.onRequest;
+      if (!fn) { res.writeHead(405).end(); return; }
       const chunks = [];
       for await (const c of req) chunks.push(c);
       const abort = new AbortController();
       res.on('close', () => abort.abort());
       const request = new Request(url, { method: req.method, headers: req.headers, signal: abort.signal, body: chunks.length ? Buffer.concat(chunks) : undefined });
-      const response = await handler(request);
+      const response = await fn({ request, env: process.env, params: {} });
       res.writeHead(response.status, Object.fromEntries(response.headers));
       if (!response.body) { res.end(); return; }
       const reader = response.body.getReader();
