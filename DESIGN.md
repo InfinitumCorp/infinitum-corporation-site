@@ -55,6 +55,7 @@ Use these spellings exactly. The symbols are part of the mark:
 | `METATRON¹⁰⁰` | Consumer command center |
 | `SCALVS.ai` | AI workforce platform |
 | `/CNDCTR/` | AI execution workspace |
+| `CONJURE` | Prediction model behind forecasts in every product |
 | `+SPCTR` | Intelligent CRM |
 | `>_ARGUS` | AI sensor fusion |
 | `[HRVST]` | Observation capture and licensing |
