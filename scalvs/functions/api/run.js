@@ -4,15 +4,18 @@
 // Runs one agent step against the Claude Messages API using ANTHROPIC_API_KEY.
 // When no key is configured it answers 503 { mode: "demo" } and the client
 // falls back to its built-in simulated runner, so the prototype still works.
+// Every live step is checked against server-side daily limits (lib/usage.js).
+
+import { checkUsage, usageHeaders } from '../../lib/usage.js';
 
 const apiUrl = (env) => `${(env.ANTHROPIC_BASE_URL || 'https://api.anthropic.com').replace(/\/$/, '')}/v1/messages`;
 const DEFAULT_MODEL = 'claude-sonnet-5-5';
 const MAX_TASK_CHARS = 6000;
 
-function json(body, status = 200) {
+function json(body, status = 200, extra = {}) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { 'content-type': 'application/json', 'cache-control': 'no-store' },
+    headers: { 'content-type': 'application/json', 'cache-control': 'no-store', ...extra },
   });
 }
 
@@ -93,6 +96,11 @@ export async function POST(request, env = {}) {
     ? [...files, { type: 'text', text: `${taskText}\n\n(${files.length} attached file${files.length > 1 ? 's' : ''} above.)` }]
     : taskText;
 
+  // Server-side quota: one live run per agent step.
+  const quota = await checkUsage(request, env, { consume: true });
+  if (!quota.ok) return json({ error: quota.error, code: quota.code, usage: quota.usage }, quota.status, usageHeaders(quota.usage));
+  const headers = usageHeaders(quota.usage);
+
   const stream = body.stream === true;
   const callModel = (webSearch) => fetch(apiUrl(env), {
     method: 'POST',
@@ -113,7 +121,13 @@ export async function POST(request, env = {}) {
   });
 
   let webSearch = wantsWebSearch(body.agent, env);
-  let upstream = await callModel(webSearch);
+  let upstream;
+  try {
+    upstream = await callModel(webSearch);
+  } catch (err) {
+    await quota.refund();
+    throw err;
+  }
   // If web search isn't enabled for this API key/org, retry once without it.
   if (!upstream.ok && webSearch && upstream.status === 400) {
     await upstream.body?.cancel().catch(() => {});
@@ -121,27 +135,34 @@ export async function POST(request, env = {}) {
     upstream = await callModel(false);
   }
 
-  if (upstream.ok && stream) return relayStream(upstream);
+  if (upstream.ok && stream) return relayStream(upstream, headers);
 
   if (!upstream.ok) {
+    await quota.refund();
     const detail = await upstream.text().catch(() => '');
     return json({ error: `Model request failed (${upstream.status})`, detail: clip(detail, 500) }, 502);
   }
 
-  const data = await upstream.json();
+  let data;
+  try {
+    data = await upstream.json();
+  } catch {
+    await quota.refund();
+    return json({ error: 'Model returned an unreadable response' }, 502);
+  }
   const output = (data.content || [])
     .filter((block) => block.type === 'text')
     .map((block) => block.text)
     .join('\n')
     .trim();
 
-  return json({ mode: 'live', model: data.model, output, usage: data.usage || null });
+  return json({ mode: 'live', model: data.model, output, usage: data.usage || null }, 200, headers);
 }
 
 // Re-emit Anthropic's SSE stream as a minimal one for the client:
 //   data: {"type":"text","text":"..."}   (repeated)
 //   data: {"type":"done","usage":{...}}  or  data: {"type":"error","error":"..."}
-export function relayStream(upstream) {
+export function relayStream(upstream, extraHeaders = {}) {
   const encoder = new TextEncoder();
   const decoder = new TextDecoder();
   const send = (controller, obj) => controller.enqueue(encoder.encode(`data: ${JSON.stringify(obj)}\n\n`));
@@ -196,12 +217,16 @@ export function relayStream(upstream) {
   });
 
   return new Response(body, {
-    headers: { 'content-type': 'text/event-stream; charset=utf-8', 'cache-control': 'no-store', 'x-accel-buffering': 'no' },
+    headers: { 'content-type': 'text/event-stream; charset=utf-8', 'cache-control': 'no-store', 'x-accel-buffering': 'no', ...extraHeaders },
   });
 }
 
-export function GET(request, env = {}) {
-  return json({ ok: true, live: Boolean(env.ANTHROPIC_API_KEY) });
+// Status for the client: whether live mode is on and the caller's quota.
+export async function GET(request, env = {}) {
+  const live = Boolean(env.ANTHROPIC_API_KEY);
+  if (!live) return json({ ok: true, live });
+  const quota = await checkUsage(request, env);
+  return json({ ok: true, live, usage: quota.usage, blocked: quota.ok ? null : { code: quota.code, error: quota.error } });
 }
 
 // Cloudflare Pages Functions entry points (secrets come from context.env).

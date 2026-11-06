@@ -10,6 +10,15 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = fileURLToPath(new URL('./public/', import.meta.url));
 const PORT = Number(process.env.PORT || 3000);
+// Local stand-in for the SCALVS_USAGE KV binding (like `wrangler pages dev`).
+const kvData = new Map();
+const ENV = {
+  ...process.env,
+  SCALVS_USAGE: {
+    get: async (k) => (kvData.has(k) ? kvData.get(k) : null),
+    put: async (k, v) => { kvData.set(k, String(v)); },
+  },
+};
 const TYPES = {
   '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8',
   '.css': 'text/css; charset=utf-8', '.svg': 'image/svg+xml', '.json': 'application/json', '.png': 'image/png',
@@ -30,7 +39,14 @@ createServer(async (req, res) => {
       const abort = new AbortController();
       res.on('close', () => abort.abort());
       const request = new Request(url, { method: req.method, headers: req.headers, signal: abort.signal, body: chunks.length ? Buffer.concat(chunks) : undefined });
-      const response = await fn({ request, env: process.env, params: {} });
+      let response;
+      try {
+        response = await fn({ request, env: ENV, params: {} });
+      } catch (err) {
+        console.error(`[api/${apiMatch[1]}]`, err);
+        if (!res.headersSent) res.writeHead(500, { 'content-type': 'application/json' }).end(JSON.stringify({ error: 'Internal error' }));
+        return;
+      }
       res.writeHead(response.status, Object.fromEntries(response.headers));
       if (!response.body) { res.end(); return; }
       const reader = response.body.getReader();

@@ -3,6 +3,7 @@
 
 import { getState, update, uid, plan, addLedger } from './store.js';
 import { REWARD_RULES, TEMPLATES } from './data.js';
+import { accessToken } from './cloud.js';
 
 let liveStatus = null; // null = unknown, true = live model, false = demo
 const API_URL = 'api/run';
@@ -11,11 +12,30 @@ const controllers = new Map(); // runId -> AbortController
 const runFiles = new Map(); // runId -> [{ name, type, text? , data? }]
 export const hasFiles = (runId) => runFiles.has(runId);
 
+// Server-side quota for live runs: { used, limit, remaining, resetAt, kind, durable }
+let usage = null;
+let blocked = null; // { code, error } when the caller can't run live right now
+export const getUsage = () => (usage ? { ...usage, blocked } : null);
+
+async function authHeaders() {
+  const token = await accessToken();
+  return token ? { authorization: `Bearer ${token}` } : {};
+}
+
+function readUsageHeaders(res) {
+  const limit = res.headers.get('x-scalvs-limit');
+  if (limit == null || !usage) return;
+  usage = { ...usage, limit: Number(limit), remaining: Number(res.headers.get('x-scalvs-remaining')), resetAt: res.headers.get('x-scalvs-reset') || usage.resetAt };
+  usage.used = Math.max(0, usage.limit - usage.remaining);
+}
+
 export async function checkLive() {
   try {
-    const res = await fetch(API_URL, { method: 'GET' });
+    const res = await fetch(API_URL, { method: 'GET', headers: await authHeaders() });
     const data = await res.json();
     liveStatus = Boolean(data.live);
+    usage = data.usage || null;
+    blocked = data.blocked || null;
   } catch {
     liveStatus = false;
   }
@@ -94,7 +114,7 @@ async function callAgent(agent, task, previous, { signal, onText, onEvent, files
       const res = await fetch(API_URL, {
         method: 'POST',
         signal,
-        headers: { 'content-type': 'application/json' },
+        headers: { 'content-type': 'application/json', ...(await authHeaders()) },
         body: JSON.stringify({
           agent: { name: agent.name, role: agent.role, instructions: agent.instructions, tools: agent.tools },
           context: vaultFor(agent),
@@ -109,9 +129,13 @@ async function callAgent(agent, task, previous, { signal, onText, onEvent, files
       } else if (!res.ok) {
         const data = await res.json().catch(() => ({}));
         liveStatus = true;
+        if (data.usage) usage = data.usage;
+        if (data.code) blocked = { code: data.code, error: data.error };
         throw new Error(data.error || `Request failed (${res.status})`);
       } else {
         liveStatus = true;
+        blocked = null;
+        readUsageHeaders(res);
         const output = (res.headers.get('content-type') || '').includes('text/event-stream')
           ? await readStream(res, onText, onEvent)
           : (await res.json()).output;
@@ -140,6 +164,12 @@ export function startRun({ task, agentIds, title, attachments = [] }) {
   const s = getState();
   const steps = agentIds.map(findAgent).filter(Boolean);
   if (!steps.length) return { error: 'Choose an agent or team.' };
+  if (liveStatus === true && blocked) return { error: blocked.error };
+  if (liveStatus === true && usage && usage.remaining < steps.length) {
+    return { error: usage.remaining === 0
+      ? `No live runs left today (${usage.limit} per day). The limit resets at midnight UTC.`
+      : `This team needs ${steps.length} live runs but you have ${usage.remaining} left today.` };
+  }
   const needed = steps.length * REWARD_RULES.creditsPerRun;
   if (s.wallet.creditsUsed + needed > plan().credits) {
     return { error: `Not enough AI credits this month on the ${plan().label} plan. Upgrade in Earnings → Plans.` };

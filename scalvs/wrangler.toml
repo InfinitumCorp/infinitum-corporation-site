@@ -7,3 +7,11 @@ compatibility_date = "2026-11-01"
 # (Pages project -> Settings -> Variables and Secrets) or with:
 #   npx wrangler pages secret put ANTHROPIC_API_KEY
 # For local `wrangler pages dev`, put them in .dev.vars (see .env.example).
+
+# Usage limits (recommended for any public live deployment). Create the
+# namespace with `npx wrangler kv namespace create SCALVS_USAGE`, then
+# uncomment and paste its id. Without it, limits fall back to per-instance
+# memory (best effort only).
+# [[kv_namespaces]]
+# binding = "SCALVS_USAGE"
+# id = "<your KV namespace id>"

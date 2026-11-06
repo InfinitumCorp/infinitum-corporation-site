@@ -182,6 +182,17 @@ export async function handleHashSignIn() {
   return result;
 }
 
+// Current access token for server calls (refreshed when close to expiry).
+export async function accessToken() {
+  if (!config || !session || !info.userId) return null;
+  try {
+    if (session.expires_at - Date.now() < 60_000) await refresh();
+    return session?.access_token || null;
+  } catch {
+    return null;
+  }
+}
+
 // ---------- public actions ----------
 export async function initCloud() {
   try {

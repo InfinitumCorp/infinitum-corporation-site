@@ -100,7 +100,12 @@ document.getElementById('scrim').addEventListener('click', () => document.body.c
 
 navigate();
 checkLive().then(() => renderView());
-onCloud(() => renderView());
+let lastEmail = null;
+onCloud((c) => {
+  // Signing in or out changes which quota applies.
+  if (c.ready && c.email !== lastEmail) { lastEmail = c.email; checkLive().then(() => renderView()); }
+  renderView();
+});
 initCloud().then(() => {
   startScheduler();
   if (authResult?.error) toast(authResult.error);

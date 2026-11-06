@@ -1,5 +1,5 @@
 import { getState, replaceState, reset, plan } from '../store.js';
-import { isLive } from '../runner.js';
+import { isLive, getUsage } from '../runner.js';
 import { esc, toast, ago } from '../ui.js';
 import { cloudInfo, sendSignInLink, syncNow, signOut } from '../cloud.js';
 
@@ -36,6 +36,16 @@ function cloudPanel() {
 
 const EXPORT_VERSION = 1;
 
+function usageRow() {
+  const u = getUsage();
+  if (!u) return '';
+  const reset = new Date(u.resetAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const who = u.kind === 'user' ? 'your account' : 'this network (not signed in)';
+  const note = u.blocked ? esc(u.blocked.error) : `${u.used} of ${u.limit} used today by ${who} · resets at ${esc(reset)}`;
+  return `<li class="list-row"><div class="list-main"><span class="dot ${u.blocked || u.remaining === 0 ? '' : 'on'}" aria-hidden="true"></span><div>
+    <strong>Live runs today</strong><p class="muted small">${note}${u.durable ? '' : ' · limits are per server instance until a KV namespace is bound'}</p></div></div></li>`;
+}
+
 export function render() {
   const s = getState();
   const live = isLive();
@@ -50,6 +60,7 @@ export function render() {
     <div class="panel-head"><h2>Status</h2></div>
     <ul class="list">
       <li class="list-row"><div class="list-main"><span class="dot ${live ? 'on' : ''}" aria-hidden="true"></span><div><strong>Agent runtime</strong><p class="muted small">${live ? 'Live · Claude via /api/run' : 'Demo mode · simulated output (set ANTHROPIC_API_KEY on the deployment for live agents)'}</p></div></div></li>
+      ${live ? usageRow() : ''}
       <li class="list-row"><div class="list-main"><span class="dot on" aria-hidden="true"></span><div><strong>Workspace</strong><p class="muted small">${s.agents.length} agents · ${s.teams.length} teams · ${s.runs.length} runs · ${s.vault.length} vault entries · ${esc(plan().label)} plan</p></div></div></li>
     </ul>
   </section>

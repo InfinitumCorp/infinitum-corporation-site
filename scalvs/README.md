@@ -23,6 +23,21 @@ Agent steps run through `functions/api/run.js`, a Cloudflare Pages Function that
 
 The composer shows which mode is active.
 
+## Usage limits
+
+Live runs cost real Claude usage, so `functions/api/run.js` checks a daily (UTC) quota on the server before every agent step. Each step of a run counts as one live run, and a run is given back if the Claude call fails.
+
+| Variable | Default | Applies to |
+|---|---|---|
+| `SCALVS_DAILY_LIMIT_USER` | `100` | each signed-in user (token verified with Supabase) |
+| `SCALVS_DAILY_LIMIT_ANON` | `10` | each anonymous visitor, by hashed IP |
+| `SCALVS_REQUIRE_SIGNIN` | `false` | `true` blocks anonymous live runs entirely |
+| `SCALVS_DAILY_LIMIT_GLOBAL` | `1000` | all callers together (`off` disables) |
+
+Counts are kept in a Cloudflare KV namespace bound as `SCALVS_USAGE`: run `npx wrangler kv namespace create SCALVS_USAGE` and paste the id into `wrangler.toml`, or add it in the dashboard (Pages project → Settings → Bindings → KV namespace). Without the binding, limits fall back to per-instance memory (best effort only), and Settings says so. KV is eventually consistent, so the caps are soft: a burst can overshoot by a few runs. They exist to stop runaway spend, not to meter billing.
+
+The composer shows how many live runs are left today, and the app refuses a run before spending anything once they're gone. For a public link, set `SCALVS_REQUIRE_SIGNIN=true` once cloud sync is on.
+
 ## Cloud sync (optional)
 
 Without configuration the workspace lives in one browser. To sync it across devices with accounts:
@@ -81,6 +96,7 @@ public/                      static site (Cloudflare Pages output directory)
   src/styles.css             clean white UI
 functions/api/run.js         Claude-backed agent step (Pages Function)
 functions/api/config.js      public client config (Supabase URL + anon key)
+lib/usage.js                 server-side daily limits (KV-backed)
 supabase/migrations/         database schema + row level security
 wrangler.toml                Cloudflare Pages config
 dev-server.mjs               zero-dependency local server (mimics Pages)
@@ -91,7 +107,6 @@ dev-server.mjs               zero-dependency local server (mimics Pages)
 - Team workspaces (shared agents and approvals between colleagues)
 - Real connectors (email, Slack, GitHub) behind OAuth, with approvals enforced server-side
 - Server-side scheduler (a Cloudflare Worker Cron Trigger + the cloud workspace) so schedules run with the app closed
-- Per-user usage limits enforced on the server before sharing a live link
 - More real tools (files, email drafts) with per-tool approval
 
 © 2026 Infinitum Corporation

@@ -1,6 +1,6 @@
 import { getState, plan } from '../store.js';
 import { TEMPLATES, REWARD_RULES } from '../data.js';
-import { startRun, approve, reject, stopRun, followUp, clearFinished, isLive, hasFiles } from '../runner.js';
+import { startRun, approve, reject, stopRun, followUp, clearFinished, isLive, hasFiles, getUsage } from '../runner.js';
 import { esc, md, ago, fmt, statusLabel, toast, until } from '../ui.js';
 import { nextRunAt, runStandingTask } from '../scheduler.js';
 
@@ -78,6 +78,16 @@ const collapsed = new Set(); // newest run is open unless the user closed it
 
 const safeUrl = (u) => (/^https?:\/\//i.test(u) ? u : '#');
 const host = (u) => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return ''; } };
+
+function modeLabel(live) {
+  if (live === false) return 'Demo mode';
+  if (live !== true) return '';
+  const u = getUsage();
+  if (!u) return 'Live · Claude';
+  if (u.blocked?.code === 'signin_required') return 'Live · <a href="#/settings">sign in</a> to run';
+  if (u.blocked?.code === 'busy') return 'Live · paused for today';
+  return `Live · ${u.remaining} run${u.remaining === 1 ? '' : 's'} left today`;
+}
 
 const webSources = (st) => (st.sources || []).filter((x) => /^https?:\/\//i.test(x.url || ''));
 
@@ -161,7 +171,7 @@ export function render() {
           ${s.agents.length ? `<optgroup label="Agents">${s.agents.map((a) => `<option value="agent:${a.id}" ${target === `agent:${a.id}` ? 'selected' : ''}>${esc(a.name)}</option>`).join('')}</optgroup>` : ''}
           ${s.teams.length ? `<optgroup label="Teams">${s.teams.map((t) => `<option value="team:${t.id}" ${target === `team:${t.id}` ? 'selected' : ''}>${esc(t.name)}</option>`).join('')}</optgroup>` : ''}
         </select>
-        <span class="muted small mode">${live === true ? 'Live · Claude' : live === false ? 'Demo mode' : ''}</span>
+        <span class="muted small mode ${getUsage()?.blocked || getUsage()?.remaining === 0 ? 'warn-text' : ''}">${modeLabel(live)}</span>
         <button class="send" type="submit" aria-label="Run task" ${s.agents.length ? '' : 'disabled'}>
           <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
