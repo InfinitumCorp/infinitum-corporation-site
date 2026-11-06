@@ -23,7 +23,7 @@ export const TEMPLATES = [
   {
     id: 'coder', name: 'Coder', glyph: 'C',
     role: 'Software engineer who writes, reviews and explains code',
-    tools: ['GitHub', '/CNDCTR/'],
+    tools: ['GitHub', ':\\ARCHITCT\\'],
     example: 'Write a TypeScript function that de-duplicates contacts by normalized email.',
   },
   {
@@ -35,7 +35,7 @@ export const TEMPLATES = [
   {
     id: 'ops', name: 'Operator', glyph: 'O',
     role: 'Operations agent who turns repeatable processes into checklists and status reports',
-    tools: ['Slack', 'Cumulus://Cloud files', '/CNDCTR/'],
+    tools: ['Slack', 'Cumulus://Cloud files', ':\\ARCHITCT\\'],
     example: 'Turn our weekly vendor-invoice review into a step-by-step checklist.',
   },
   {
@@ -48,7 +48,7 @@ export const TEMPLATES = [
 
 export const ALL_TOOLS = [
   'Web search', 'Email', 'Slack', 'GitHub', 'Knowledge base',
-  'Cumulus://Cloud files', 'METATRON¹⁰⁰', '+SPCTR CRM', '/CNDCTR/', 'VEIL</> sidebar', 'FABRIC smart replies',
+  'Cumulus://Cloud files', 'METATRON¹⁰⁰', '+SPCTR CRM', ':\\ARCHITCT\\', 'VEIL</> sidebar', 'FABRIC smart replies',
 ];
 
 export const CONNECTORS = [
@@ -58,7 +58,7 @@ export const CONNECTORS = [
   { id: 'drive', name: 'Docs & files', group: 'Your world', desc: 'Use documents as source material.' },
   { id: 'calendar', name: 'Calendar', group: 'Your world', desc: 'Schedule follow-ups and meetings.' },
   { id: 'cumulus', name: 'Cumulus://Cloud', group: 'Infinitum Nexus', desc: 'Agent runtime, storage and data licensing.' },
-  { id: 'cndctr', name: '/CNDCTR/', group: 'Infinitum Nexus', desc: 'Coordinate agents into verified workflows.' },
+  { id: 'cndctr', name: ':\\ARCHITCT\\', group: 'Infinitum Nexus', desc: 'Coordinate agents into verified workflows.' },
   { id: 'spectre', name: '+SPCTR', group: 'Infinitum Nexus', desc: 'The AI sales team and account memory.' },
   { id: 'veil', name: 'VEIL</>', group: 'Infinitum Nexus', desc: 'Browser sidebar assistant.' },
   { id: 'metatron', name: 'METATRON¹⁰⁰', group: 'Infinitum Nexus', desc: 'Research and prediction engine.' },

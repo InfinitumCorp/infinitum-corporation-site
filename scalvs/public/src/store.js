@@ -46,10 +46,19 @@ function seed() {
   };
 }
 
+// Product renames: old wordmarks saved in a workspace are updated on load.
+const RENAMED_TOOLS = { '/CNDCTR/': ':\\ARCHITCT\\' };
+export function migrate(st) {
+  (st.agents || []).forEach((a) => {
+    if (Array.isArray(a.tools)) a.tools = [...new Set(a.tools.map((t) => RENAMED_TOOLS[t] || t))];
+  });
+  return st;
+}
+
 function load() {
   try {
     const raw = localStorage.getItem(KEY);
-    if (raw) return { ...seed(), ...JSON.parse(raw) };
+    if (raw) return migrate({ ...seed(), ...JSON.parse(raw) });
   } catch { /* storage unavailable: fall back to memory */ }
   return seed();
 }
@@ -77,7 +86,7 @@ export function subscribe(fn) {
 
 // fromCloud: applied from sync, so it must not be pushed back.
 export function replaceState(next, { fromCloud = false } = {}) {
-  state = { ...seed(), ...next };
+  state = migrate({ ...seed(), ...next });
   if (!fromCloud) state.updatedAt = Date.now();
   persist();
   listeners.forEach((fn) => fn(state, { local: !fromCloud }));

@@ -85,7 +85,7 @@ function teams() {
   const builder = teamDraft ? `
     <form id="team-form" class="form team-builder">
       <label>Team name<input name="name" required maxlength="40" value="${esc(teamDraft.name)}" placeholder="e.g. Research → Draft"></label>
-      <p class="small muted">Pick agents in the order /CNDCTR/ should run them. Each one builds on the previous output.</p>
+      <p class="small muted">Pick agents in the order :\\ARCHITCT\\ should run them. Each one builds on the previous output.</p>
       <div class="chips pick">${s.agents.map((a) => {
         const pos = teamDraft.agentIds.indexOf(a.id);
         return `<button type="button" class="chip ${pos >= 0 ? 'sel' : ''}" data-action="team-toggle" data-id="${a.id}">${pos >= 0 ? `${pos + 1}. ` : ''}${esc(a.name)}</button>`;
@@ -95,7 +95,7 @@ function teams() {
 
   return `
   <section class="panel">
-    <div class="panel-head"><h2>Teams of agents</h2><span class="tag">coordinated by /CNDCTR/</span></div>
+    <div class="panel-head"><h2>Teams of agents</h2><span class="tag">coordinated by :\\ARCHITCT\\</span></div>
     ${s.teams.length ? `<ul class="teams">${list}</ul>` : '<p class="muted small">No teams yet. Chain two or more agents so they plan, act and verify together.</p>'}
     ${builder}
   </section>`;

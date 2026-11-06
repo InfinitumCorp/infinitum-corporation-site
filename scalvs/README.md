@@ -6,7 +6,7 @@ This is the first working prototype of the four-step flow from the [product page
 
 | Step | Screen | What works |
 |---|---|---|
-| 01 Create | **Agent Studio** | Six templates (Researcher, Writer, Coder, Sales rep, Operator, Support); name, role, instructions, tools, Context Vault, approval and schedule and standing task per agent; plan-based agent limits; multi-agent **teams** run in sequence (/CNDCTR/-style), each agent building on the previous output. |
+| 01 Create | **Agent Studio** | Six templates (Researcher, Writer, Coder, Sales rep, Operator, Support); name, role, instructions, tools, Context Vault, approval and schedule and standing task per agent; plan-based agent limits; multi-agent **teams** run in sequence (:\ARCHITCT\\-style), each agent building on the previous output. |
 | 02 Connect | **Connect** | Toggle connections to your apps and Infinitum products (simulated); **Nexus Context Vault** entries with per-product permissions that agents read when memory is on. |
 | 03 Run | **Command Center** | Chat-style composer to give an agent or team a task, with **file attachments** (text files inline; PDFs and images sent to Claude natively, 5 files / 3 MB); agent output **streams in live**; **Stop** a running task; **human approval** gates; copy any agent's output; **follow up** on a finished run to have an agent revise its answer; agents with the Web search tool **search the web** (live mode) and show their sources; AI-credit meter per plan; **scheduled agents** run their standing task hourly, daily or weekly while the app is open (one catch-up run on open, never replayed). |
 | — | **Settings** | Runtime status; **cloud sync** (email sign-in link, workspace syncs across devices); **export / import** the whole workspace as JSON; reset. |
