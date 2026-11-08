@@ -1,0 +1,8 @@
+{
+  "name": "infinitum-corporation-site",
+  "private": true,
+  "description": "Infinitum Corporation static site. The build checks the approved SEO tags, phone number, home title, and organization schema.",
+  "scripts": {
+    "build": "node scripts/verify-seo.mjs"
+  }
+}
