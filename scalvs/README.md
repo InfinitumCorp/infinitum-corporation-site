@@ -91,7 +91,7 @@ npm run deploy           # production deploy, which needs sign-off first
 
 ### Environment variables
 
-Set secrets with `npx wrangler secret put <NAME>`, or put them in a git-ignored `.dev.vars` for `wrangler dev`. Never commit them. With none set, the app runs in demo mode.
+Set secrets with `npx wrangler secret put <NAME>`, or put them in a git-ignored `.dev.vars` for `wrangler dev`. Never commit them. With no `ANTHROPIC_API_KEY`, the deployed Worker answers through Workers AI (the `AI` binding in `wrangler.jsonc`, model set by `WORKERS_AI_MODEL`), so it needs no key. Only the plain `npm run dev` server, which has no binding, runs in demo mode.
 
 | Name | Kind | What it is |
 |---|---|---|
