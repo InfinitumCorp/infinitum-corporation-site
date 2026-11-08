@@ -14,7 +14,9 @@
     "build": "node scripts/build-assets.mjs",
     "dev:worker": "npm run build && wrangler dev",
     "deploy:preview": "npm run build && wrangler versions upload",
-    "deploy": "npm run build && wrangler deploy"
+    "deploy": "npm run build && wrangler deploy",
+    "extension:icons": "node scripts/extension.mjs icons",
+    "extension:zip": "node scripts/extension.mjs zip"
   },
   "devDependencies": {
     "wrangler": "^4.158.0"
