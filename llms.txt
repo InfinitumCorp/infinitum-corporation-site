@@ -1,0 +1,55 @@
+# Infinitum Corporation
+
+> AI-powered services and blockchain-governed products for business, government and defense. Headquartered at 1629 K Street NW, Suite 300, Washington, D.C. Contact: info@theinfinitumcorporation.com, (202) 729-9509.
+
+## Company
+
+- [Infinitum Corporation® | Cyber Security Consulting, Washington DC](https://infinitumcorporation.ai/): Infinitum Corporation® provides cyber security consulting, security research and Corporate Cognitive Warfare analysis from Washington, DC.
+- [About](https://infinitumcorporation.ai/about): Meet Infinitum Corporation, a Washington, D.C.-based intelligence, security, and technology consultancy.
+- [Careers](https://infinitumcorporation.ai/careers): Join Infinitum Corporation and build AI-powered, blockchain-governed products and services for business, government and military clients.
+- [Industries](https://infinitumcorporation.ai/industries): Technology and security consulting contexts for government organizations and private and public corporations.
+- [Insights](https://infinitumcorporation.ai/insights): A home for future Infinitum Corporation perspectives on technology, security, and infrastructure.
+- [Investor Relations](https://infinitumcorporation.ai/investor-relations): Infinitum Corporation is a privately held company building AI-powered, blockchain-governed technology for business, government and defense.
+- [Mission](https://infinitumcorporation.ai/mission): Turn intelligence into advantage. The full Infinitum Corporation mission, vision and commitments.
+- [Press](https://infinitumcorporation.ai/press): Infinitum Corporation press releases and company announcements.
+- [Reflexive Capital Warfare™](https://infinitumcorporation.ai/reflexive-capital-warfare): Reflexive Capital Warfare™ (RCW™) is a specialized Infinitum consulting service for the contest over market confidence: how narratives about risk move capital, and how to compete and defend within that loop.
+- [Security Research & CCW](https://infinitumcorporation.ai/security-research): Bug bounty and vulnerability disclosure participation, CCW services and clients organized by sector.
+- [Strategic Partners](https://infinitumcorporation.ai/strategic-partners): Infinitum is pursuing strategic relationships with leading technology providers across cybersecurity, cloud, AI and enterprise software.
+- [Supplier Relations](https://infinitumcorporation.ai/supplier-relations): Partner with Infinitum Corporation to supply the components, services and technology behind our products and client projects.
+- [Tokens](https://infinitumcorporation.ai/tokens): The Infinitum token economy: use a product, choose what you contribute and share in the revenue it creates, with every product token held in FIRM Wallet.
+
+## Products
+
+- [ÆTHER MIL™](https://infinitumcorporation.ai/products/aether): ÆTHER MIL is Infinitum's secure voice, text, data and mesh networking system, built only for authorized military and defense organizations as the communications layer of ODIN°.
+- [:\ARCHITECT\™](https://infinitumcorporation.ai/products/architect): :\ARCHITECT\ is Infinitum's AI execution workspace. Describe an outcome; :\ARCHITECT\ plans it, builds it, runs it across your apps and proves it is done.
+- [>_ARGUS MIL™](https://infinitumcorporation.ai/products/argus): >_ARGUS MIL is Infinitum's AI sensor-fusion system for authorized military and defense organizations: the Observe layer of ODIN°, turning every drone, sensor and field feed into one live picture.
+- [AZRAIL MIL™](https://infinitumcorporation.ai/products/azrail): AZRAIL MIL is Infinitum's autonomous counter-drone aircraft, built only for authorized military organizations as part of ODIN°.
+- [CHERUBIM™](https://infinitumcorporation.ai/products/cherubim): CHERUBIM is Infinitum's family of three military drones: CHERUBIM 1 for quick reaction, CHERUBIM 2 for tethered overwatch and CHERUBIM 3 for indoor tactical reconnaissance.
+- [Cumulus://Cloud™ — Infinitum Corporation](https://infinitumcorporation.ai/products/cumulus-exchange): Cumulus://Cloud is Infinitum's AI-native cloud: storage, compute, databases and AI infrastructure for individuals, businesses, developers and governments, with an opt-in exchange that turns eligible data into revenue.
+- [DAEMON™](https://infinitumcorporation.ai/products/daemon): DAEMON is Infinitum's drone series: CHERUBIM for quick-reaction overwatch and close-quarters reconnaissance, SERAPHIM for long-endurance reconnaissance and patrol, and AZRAIL MIL for counter-drone defense. For the military only.
+- [ei·det·ic™](https://infinitumcorporation.ai/products/eidetic): ei·det·ic is Infinitum's identity-intelligence platform: AI facial and identity matching with consent, purpose controls and a tamper-evident record of every search.
+- [E(O)N MIL™](https://infinitumcorporation.ai/products/eon): E(O)N MIL is Infinitum's wearable electronic-warfare and counter-drone platform, built only for authorized military and defense organizations as part of ODIN°.
+- [FabriC++™ — Infinitum Corporation](https://infinitumcorporation.ai/products/fabric): FabriC++ is Infinitum's secure communications platform: encrypted messaging, voice and video with AI built in, and an opt-in data economy that shares revenue with the people who create it.
+- [$FIRM™ & $FIRM Wallet™](https://infinitumcorporation.ai/products/firm): FIRM is the nexus token of Firmament Network, and FIRM Wallet is where it and every Infinitum token live: a standard self-custody wallet with a built-in decentralized exchange.
+- [$Firmament Network™](https://infinitumcorporation.ai/products/firmament-network): Firmament Network is the trust layer of the Infinitum ecosystem: one blockchain for identity, provenance, licensing, payments and audit across every product.
+- [Flower™](https://infinitumcorporation.ai/products/flower): Flower is the smart base station for POLLEN. It launches, recovers, charges, updates and protects the swarm, and runs the AI that keeps every aircraft ready.
+- [[HRVST]™](https://infinitumcorporation.ai/products/hrvst): [HRVST] (Harvest) turns what you see into value. Capture with camera glasses, let AI refine it into useful, privacy-filtered observations, and license them, or keep them private, on your terms.
+- [METATRON¹⁰⁰™](https://infinitumcorporation.ai/products/metatron): METATRON¹⁰⁰ is the consumer version of ODIN°: every Infinitum product in one AI command center for your life, your home and your business.
+- [ODIN°™](https://infinitumcorporation.ai/products/odin): ODIN° is the complete Infinitum suite, unified into one command, intelligence and autonomy system for military use only.
+- [ORBIS™](https://infinitumcorporation.ai/products/orbis): ORBIS is Infinitum's spherical drone: a 220 mm protective frame around an AI core, built to fly where other drones cannot, inside buildings, tunnels, tanks and tight spaces.
+- [POLLEN™](https://infinitumcorporation.ai/products/pollen): POLLEN is a swarm of palm-sized autonomous aircraft that think together. Hundreds of drones share one mission, map large areas fast and keep working when individual aircraft drop out.
+- [Project-specific tokens](https://infinitumcorporation.ai/products/project-tokens): Every major Infinitum product has its own token, paired with FIRM and held in FIRM Wallet, so each product's economy can grow on its own while staying connected to the whole.
+- [SCALVS.ai™](https://infinitumcorporation.ai/products/scalus): SCALVS.ai is Infinitum's AI workforce platform: build agents that research, write, code, sell and operate for you, in any browser, and share in the value they create.
+- [SERAPHIM™](https://infinitumcorporation.ai/products/seraphim): SERAPHIM is Infinitum's long-endurance vertical-takeoff aircraft for wide-area reconnaissance, patrol and disaster relief, built for authorized military and defense organizations.
+- [SLUG™](https://infinitumcorporation.ai/products/slug): SLUG is Infinitum's autonomous land drone: a low, quiet, tracked ground vehicle that carries loads, watches ground and extends the network where people should not have to go.
+- [+SPCTR (Spectre)™](https://infinitumcorporation.ai/products/spectre): +SPCTR (Spectre) is Infinitum's AI-powered intelligent CRM. It researches every account for you, predicts what each relationship needs next, and puts AI agents to work on the busywork.
+- [#THRONE™](https://infinitumcorporation.ai/products/throne): #THRONE is Infinitum's line of AI computers: laptops, towers and rack servers with the Infinitum ecosystem built in, secured from the chip up and ready to run AI on the device.
+- [VEIL</>™](https://infinitumcorporation.ai/products/veil): VEIL</> is Infinitum's free, Tor-first secure browser and the front door to the Infinitum ecosystem: private browsing, built-in AI, email, encrypted storage, FIRM Wallet and $VEIL rewards in one app.
+
+## Legal
+
+- [Open-source acknowledgements](https://infinitumcorporation.ai/legal/open-source): Open-source software used on the Infinitum Corporation website, with its licenses and copyright notices.
+- [Privacy Policy](https://infinitumcorporation.ai/privacy-policy): How Infinitum Corporation collects, uses, shares and protects personal information across our website, services and products.
+- [Site map](https://infinitumcorporation.ai/site-map): Every page on the Infinitum Corporation website, in one place.
+- [Terms of Use](https://infinitumcorporation.ai/terms-of-use): The terms that apply when you use the Infinitum Corporation website and our publicly available products.
+

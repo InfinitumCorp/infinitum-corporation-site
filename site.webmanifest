@@ -1,0 +1,20 @@
+{
+  "name": "Infinitum Corporation",
+  "short_name": "Infinitum",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#f4f4f1",
+  "theme_color": "#f4f4f1",
+  "icons": [
+    {
+      "src": "/brand/icon.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    },
+    {
+      "src": "/brand/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

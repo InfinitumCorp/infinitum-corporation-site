@@ -1,0 +1,173 @@
+{
+  "_readme": "Source of truth for the Downloads page and the /download/<id>[/<platform>] direct links. Edit this file, then run: node _tools/build-downloads.mjs. To launch a product: set status to \"live\" and give each platform its installer url. To move a product to its own site: change website to its plannedWebsite once that site is up.",
+  "sections": [
+    { "id": "browser-wallet", "eyebrow": "01 / BROWSER &amp; WALLET", "title": "Browse, hold and swap." },
+    { "id": "comms-cloud", "eyebrow": "02 / COMMUNICATIONS &amp; CLOUD", "title": "Stay connected and in sync." },
+    { "id": "ai", "eyebrow": "03 / AI &amp; PRODUCTIVITY", "title": "Put AI to work." },
+    { "id": "os", "eyebrow": "04 / OPERATING SYSTEM", "title": "Throne OS<sup class=\"tm\">™</sup>." }
+  ],
+  "products": [
+    {
+      "id": "firm-suite",
+      "section": "browser-wallet",
+      "name": "$FIRM Suite<sup class=\"tm\">™</sup>",
+      "description": "$FIRM Wallet<sup class=\"tm\">™</sup>, any-token swap and $Firmament Network<sup class=\"tm\">™</sup> in one app. Comes with Cumulus://ID<sup class=\"tm\">™</sup> (CID): Cumulus://Mail<sup class=\"tm\">™</sup>, Cumulus://Drive<sup class=\"tm\">™</sup> and one sign-in for every Infinitum app.",
+      "website": "https://firmwallet.app",
+      "plannedWebsite": "https://firmwallet.app",
+      "status": "coming-soon",
+      "platforms": [
+        { "id": "windows", "name": "Windows", "url": null },
+        { "id": "macos", "name": "macOS", "url": null },
+        { "id": "linux", "name": "Linux", "url": null },
+        { "id": "android", "name": "Android", "url": null },
+        { "id": "ios", "name": "iOS", "url": null }
+      ]
+    },
+    {
+      "id": "veil",
+      "section": "browser-wallet",
+      "name": "VEIL&lt;/&gt;<sup class=\"tm\">™</sup>",
+      "description": "The privacy-first browser, with $FIRM Wallet<sup class=\"tm\">™</sup> built in.",
+      "website": "/products/veil",
+      "plannedWebsite": "https://infinitumveil.app",
+      "status": "coming-soon",
+      "platforms": [
+        { "id": "windows", "name": "Windows", "url": null },
+        { "id": "macos", "name": "macOS", "url": null },
+        { "id": "linux", "name": "Linux", "url": null },
+        { "id": "android", "name": "Android", "url": null },
+        { "id": "ios", "name": "iOS", "url": null }
+      ]
+    },
+    {
+      "id": "fabric",
+      "section": "comms-cloud",
+      "name": "FabriC++<sup class=\"tm\">™</sup>",
+      "description": "Encrypted voice, text and data, over the internet or mesh.",
+      "website": "/products/fabric",
+      "plannedWebsite": "https://infinitumfabric.app",
+      "status": "coming-soon",
+      "platforms": [
+        { "id": "windows", "name": "Windows", "url": null },
+        { "id": "macos", "name": "macOS", "url": null },
+        { "id": "linux", "name": "Linux", "url": null },
+        { "id": "android", "name": "Android", "url": null },
+        { "id": "ios", "name": "iOS", "url": null }
+      ]
+    },
+    {
+      "id": "cumulus",
+      "section": "comms-cloud",
+      "name": "Cumulus://Cloud<sup class=\"tm\">™</sup>",
+      "description": "Sync files, photos and video, with Cumulus://Mail<sup class=\"tm\">™</sup>, Cumulus://Drive<sup class=\"tm\">™</sup> and Cumulus://ID<sup class=\"tm\">™</sup> (CID) in one app.",
+      "website": "/products/cumulus-exchange",
+      "plannedWebsite": "https://cumuluscloud.app",
+      "status": "coming-soon",
+      "platforms": [
+        { "id": "windows", "name": "Windows", "url": null },
+        { "id": "macos", "name": "macOS", "url": null },
+        { "id": "linux", "name": "Linux", "url": null },
+        { "id": "android", "name": "Android", "url": null },
+        { "id": "ios", "name": "iOS", "url": null }
+      ]
+    },
+    {
+      "id": "scalvs",
+      "section": "ai",
+      "name": "SCALVS.ai<sup class=\"tm\">™</sup>",
+      "description": "AI agents in a dashboard and mobile web app, with browser extensions.",
+      "website": "https://scalvs.app",
+      "plannedWebsite": "https://scalvs.app",
+      "status": "coming-soon",
+      "platforms": [
+        { "id": "chrome", "name": "Chrome", "url": null },
+        { "id": "edge", "name": "Edge", "url": null },
+        { "id": "firefox", "name": "Firefox", "url": null },
+        { "id": "safari", "name": "Safari", "url": null }
+      ]
+    },
+    {
+      "id": "metatron",
+      "section": "ai",
+      "name": "METATRON¹⁰⁰<sup class=\"tm\">™</sup>",
+      "description": "Forecasts, \"what if?\" scenarios and one view of everything.",
+      "website": "/products/metatron",
+      "plannedWebsite": null,
+      "status": "coming-soon",
+      "platforms": [
+        { "id": "windows", "name": "Windows", "url": null },
+        { "id": "macos", "name": "macOS", "url": null },
+        { "id": "linux", "name": "Linux", "url": null }
+      ]
+    },
+    {
+      "id": "architect",
+      "section": "ai",
+      "name": ":\\ARCHITECT\\<sup class=\"tm\">™</sup>",
+      "description": "Describe an outcome; :\\ARCHITECT\\<sup class=\"tm\">™</sup> plans it, runs it and proves it is done.",
+      "website": "/products/architect",
+      "plannedWebsite": "https://cndctr.app",
+      "status": "coming-soon",
+      "platforms": [
+        { "id": "windows", "name": "Windows", "url": null },
+        { "id": "macos", "name": "macOS", "url": null },
+        { "id": "linux", "name": "Linux", "url": null }
+      ]
+    },
+    {
+      "id": "spectre",
+      "section": "ai",
+      "name": "+SPCTR<sup class=\"tm\">™</sup> (Spectre)",
+      "description": "The AI-powered CRM, on your desktop and in your browser.",
+      "website": "/products/spectre",
+      "plannedWebsite": null,
+      "status": "coming-soon",
+      "platforms": [
+        { "id": "windows", "name": "Windows", "url": null },
+        { "id": "macos", "name": "macOS", "url": null },
+        { "id": "chrome", "name": "Chrome", "url": null },
+        { "id": "edge", "name": "Edge", "url": null }
+      ]
+    },
+    {
+      "id": "hrvst",
+      "section": "ai",
+      "name": "[HRVST]<sup class=\"tm\">™</sup>",
+      "description": "Capture, review and license observations from your phone.",
+      "website": "/products/hrvst",
+      "plannedWebsite": null,
+      "status": "coming-soon",
+      "platforms": [
+        { "id": "android", "name": "Android", "url": null },
+        { "id": "ios", "name": "iOS", "url": null }
+      ]
+    },
+    {
+      "id": "eidetic",
+      "section": "ai",
+      "name": "ei·det·ic<sup class=\"tm\">™</sup>",
+      "description": "Consent-first identity intelligence. Installers are released to approved organisations only.",
+      "website": "/products/eidetic",
+      "plannedWebsite": null,
+      "status": "coming-soon",
+      "platforms": [
+        { "id": "windows", "name": "Windows", "url": null },
+        { "id": "macos", "name": "macOS", "url": null }
+      ]
+    },
+    {
+      "id": "throne-os",
+      "section": "os",
+      "name": "Throne OS<sup class=\"tm\">™</sup>",
+      "description": "The hardened Linux-based operating system for #THRONE<sup class=\"tm\">™</sup> computers, with recovery images and updates.",
+      "website": "/products/throne",
+      "plannedWebsite": null,
+      "status": "coming-soon",
+      "platforms": [
+        { "id": "book", "name": "#THRONE Book", "url": null },
+        { "id": "tower", "name": "#THRONE Tower", "url": null },
+        { "id": "rack", "name": "#THRONE Rack", "url": null }
+      ]
+    }
+  ]
+}
