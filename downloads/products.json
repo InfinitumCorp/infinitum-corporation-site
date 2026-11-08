@@ -92,7 +92,7 @@
       "name": "METATRON¹⁰⁰<sup class=\"tm\">™</sup>",
       "description": "Forecasts, \"what if?\" scenarios and one view of everything.",
       "website": "/products/metatron",
-      "plannedWebsite": null,
+      "plannedWebsite": "https://mttrn.app",
       "status": "coming-soon",
       "platforms": [
         { "id": "windows", "name": "Windows", "url": null },
