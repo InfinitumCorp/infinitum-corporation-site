@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "SCALVS.ai™",
   "short_name": "SCALVS.ai",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Ask SCALVS.ai from any page: chat in the side panel, or send the selection or the current page to it.",
   "minimum_chrome_version": "116",
   "icons": {
@@ -22,6 +22,6 @@
   "options_page": "src/options.html",
   "background": { "service_worker": "src/background.js", "type": "module" },
   "permissions": ["sidePanel", "contextMenus", "storage", "activeTab", "scripting"],
-  "host_permissions": ["https://scalvs-ai.infinitumcorp.workers.dev/*"],
+  "host_permissions": ["https://scalvs.app/*"],
   "optional_host_permissions": ["https://*/*", "http://localhost/*", "http://127.0.0.1/*"]
 }

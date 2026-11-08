@@ -2,7 +2,7 @@
 // the server's minimal SSE ({type:"text"|"done"|"error"}). No keys live here;
 // the model key stays on the SCALVS.ai server.
 
-export const DEFAULT_BASE = "https://scalvs-ai.infinitumcorp.workers.dev";
+export const DEFAULT_BASE = "https://scalvs.app";
 export const MAX_TASK = 6000; // the server clips tasks at 6000 characters
 const MAX_PREVIOUS = 8000;
 export const AGENT = {
