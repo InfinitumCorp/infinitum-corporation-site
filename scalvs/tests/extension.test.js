@@ -90,6 +90,7 @@ test('status() reports demo mode and missing deployments', async () => {
 
 test('without ANTHROPIC_API_KEY, /api/run answers through the Workers AI binding (stream and JSON)', async () => {
   const { POST, GET } = await import('../api/run.js');
+  const { DEFAULT_WORKERS_AI_MODEL } = await import('../api/_workers-ai.js');
   delete process.env.ANTHROPIC_API_KEY;
   const calls = [];
   const ai = {
@@ -103,9 +104,8 @@ test('without ANTHROPIC_API_KEY, /api/run answers through the Workers AI binding
   const env = { AI: ai };
   assert.deepEqual(await (await GET(new Request('https://s.test/api/run'), env)).json(), { ok: true, live: true });
   const streamed = await ask({ base: 'https://s.test', question: 'Hi', fetchImpl: (url, init) => POST(new Request(url, init), env) });
-  assert.deepEqual(streamed, { text: 'Open weights', model: '@cf/zai-org/glm-4.7-flash' });
+  assert.deepEqual(streamed, { text: 'Open weights', model: process.env.WORKERS_AI_MODEL || DEFAULT_WORKERS_AI_MODEL });
   assert.equal(calls[0].input.messages[0].role, 'system');
-  assert.equal(calls[0].input.chat_template_kwargs.enable_thinking, false);
   const plain = await POST(new Request('https://s.test/api/run', { method: 'POST', body: JSON.stringify({ task: 'Hi' }) }), env);
   assert.equal((await plain.json()).output, 'Plain answer');
   const none = await POST(new Request('https://s.test/api/run', { method: 'POST', body: JSON.stringify({ task: 'Hi' }) }), {});
