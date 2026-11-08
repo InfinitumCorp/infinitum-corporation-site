@@ -10,6 +10,11 @@
   "observability": { "enabled": true },
   // Workers AI: the model when no ANTHROPIC_API_KEY secret is set (open-weight, no key).
   "ai": { "binding": "AI", "remote": true },
+  // Production domains (zone scalvs.app is on this Cloudflare account).
+  "routes": [
+    { "pattern": "scalvs.app", "custom_domain": true },
+    { "pattern": "www.scalvs.app", "custom_domain": true }
+  ],
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",
