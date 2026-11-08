@@ -54,9 +54,9 @@ export function buildSystemPrompt(agent = {}, context = []) {
   ].filter(Boolean).join('\n\n');
 }
 
-export async function POST(request) {
+export async function POST(request, env = {}) {
   const key = process.env.ANTHROPIC_API_KEY;
-  if (!key) return json({ mode: 'demo', error: 'ANTHROPIC_API_KEY is not configured' }, 503);
+  if (!key && !env.AI) return json({ mode: 'demo', error: 'No model is configured (ANTHROPIC_API_KEY or the Workers AI binding)' }, 503);
 
   let body;
   try {
@@ -67,6 +67,7 @@ export async function POST(request) {
 
   const task = clip(body?.task, MAX_TASK_CHARS).trim();
   if (!task) return json({ error: 'Missing task' }, 400);
+  if (!key) return runWorkersAi(env.AI, body, task);
 
   const userContent = body.previous
     ? `Task:\n${task}\n\nOutput from the previous agent in this team, to build on:\n${clip(body.previous, 8000)}`
@@ -183,6 +184,104 @@ export function relayStream(upstream) {
   });
 }
 
-export function GET() {
-  return json({ ok: true, live: Boolean(process.env.ANTHROPIC_API_KEY) });
+export function GET(_request, env = {}) {
+  return json({ ok: true, live: Boolean(process.env.ANTHROPIC_API_KEY || env.AI) });
+}
+
+// ---------- Workers AI (no API key) ----------
+// Without ANTHROPIC_API_KEY the Worker answers with a free open-weight model through
+// its AI binding (wrangler.jsonc "ai"). Same request and response contract as above.
+export const DEFAULT_WORKERS_AI_MODEL = '@cf/zai-org/glm-4.7-flash';
+
+/** Text from one Workers AI result or stream chunk: {response} or OpenAI-shaped choices. */
+export function workersAiText(o) {
+  if (!o || typeof o !== 'object') return '';
+  if (typeof o.response === 'string') return o.response;
+  const c = Array.isArray(o.choices) ? o.choices[0] : null;
+  const t = c?.delta?.content ?? c?.message?.content ?? c?.text;
+  return typeof t === 'string' ? t : '';
+}
+
+export async function runWorkersAi(ai, body, task) {
+  const model = process.env.SCALVS_WORKERS_AI_MODEL || DEFAULT_WORKERS_AI_MODEL;
+  const userContent = body.previous
+    ? `Task:\n${task}\n\nOutput from the previous agent in this team, to build on:\n${clip(body.previous, 8000)}`
+    : task;
+  const input = {
+    messages: [
+      { role: 'system', content: buildSystemPrompt(body.agent, body.context) },
+      { role: 'user', content: userContent },
+    ],
+    max_tokens: 1500,
+    // Reasoning models otherwise spend the budget thinking before they answer.
+    chat_template_kwargs: { enable_thinking: false },
+  };
+  const stream = body.stream === true;
+  let out;
+  try {
+    out = await ai.run(model, stream ? { ...input, stream: true } : input);
+  } catch {
+    return json({ error: 'The model request could not complete. Please retry.' }, 502);
+  }
+  if (!stream) {
+    const output = workersAiText(out).trim();
+    if (!output) return json({ error: 'The model returned no text. Please retry.' }, 502);
+    return json({ mode: 'live', model, output, usage: out?.usage || null });
+  }
+  return relayWorkersAiStream(out, model);
+}
+
+// Workers AI streams SSE lines "data: {...}" and ends with "data: [DONE]".
+// Re-emitted in this API's minimal format (text / done / error), like relayStream.
+export function relayWorkersAiStream(upstream, model) {
+  const encoder = new TextEncoder();
+  const decoder = new TextDecoder();
+  const send = (controller, obj) => controller.enqueue(encoder.encode(`data: ${JSON.stringify(obj)}\n\n`));
+  const source = upstream instanceof ReadableStream ? upstream : upstream?.body;
+  const body = new ReadableStream({
+    async start(controller) {
+      let failed = null;
+      let sawText = false;
+      let finished = false;
+      let usage = null;
+      let buffer = '';
+      try {
+        if (!source) throw new Error('no stream');
+        const reader = source.getReader();
+        while (!finished) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true }).replace(/\r\n/g, '\n');
+          let cut;
+          while (!finished && (cut = buffer.indexOf('\n')) >= 0) {
+            const line = buffer.slice(0, cut).trim();
+            buffer = buffer.slice(cut + 1);
+            if (!line.startsWith('data:')) continue;
+            const data = line.slice(5).trim();
+            if (data === '[DONE]') { finished = true; break; }
+            let chunk;
+            try { chunk = JSON.parse(data); } catch { continue; }
+            if (chunk.usage) usage = chunk.usage;
+            const text = workersAiText(chunk);
+            if (text) {
+              if (text.trim()) sawText = true;
+              send(controller, { type: 'text', text });
+            }
+          }
+        }
+        reader.cancel().catch(() => {});
+        if (!finished) failed = 'The model stream ended early. Please retry.';
+        else if (!sawText) failed = 'The model returned no text. Please retry.';
+      } catch {
+        failed = 'The model stream was interrupted. Please retry.';
+      }
+      try {
+        send(controller, failed ? { type: 'error', error: failed } : { type: 'done', model, usage });
+        controller.close();
+      } catch { /* client already disconnected */ }
+    },
+  });
+  return new Response(body, {
+    headers: { 'content-type': 'text/event-stream; charset=utf-8', 'cache-control': 'no-store', 'x-accel-buffering': 'no' },
+  });
 }

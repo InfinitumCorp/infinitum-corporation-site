@@ -8,6 +8,8 @@
   "compatibility_date": "2026-11-01",
   "compatibility_flags": ["nodejs_compat"],
   "observability": { "enabled": true },
+  // Workers AI: the model when no ANTHROPIC_API_KEY secret is set (open-weight, no key).
+  "ai": { "binding": "AI", "remote": true },
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",

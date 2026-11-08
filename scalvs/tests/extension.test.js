@@ -87,3 +87,27 @@ test('status() reports demo mode and missing deployments', async () => {
   assert.deepEqual(await status({ fetchImpl: async () => json(200, { ok: true, live: false }) }), { live: false });
   await assert.rejects(status({ fetchImpl: async () => new Response('nope', { status: 404 }) }), /not deployed/);
 });
+
+test('without ANTHROPIC_API_KEY, /api/run answers through the Workers AI binding (stream and JSON)', async () => {
+  const { POST, GET } = await import('../api/run.js');
+  delete process.env.ANTHROPIC_API_KEY;
+  const calls = [];
+  const ai = {
+    async run(model, input) {
+      calls.push({ model, input });
+      if (!input.stream) return { response: 'Plain answer', usage: { total_tokens: 5 } };
+      const lines = ['data: {"response":"Open "}', 'data: {"choices":[{"delta":{"content":"weights"}}]}', 'data: [DONE]'];
+      return new ReadableStream({ start(c) { c.enqueue(new TextEncoder().encode(lines.join('\n\n') + '\n\n')); c.close(); } });
+    },
+  };
+  const env = { AI: ai };
+  assert.deepEqual(await (await GET(new Request('https://s.test/api/run'), env)).json(), { ok: true, live: true });
+  const streamed = await ask({ base: 'https://s.test', question: 'Hi', fetchImpl: (url, init) => POST(new Request(url, init), env) });
+  assert.deepEqual(streamed, { text: 'Open weights', model: '@cf/zai-org/glm-4.7-flash' });
+  assert.equal(calls[0].input.messages[0].role, 'system');
+  assert.equal(calls[0].input.chat_template_kwargs.enable_thinking, false);
+  const plain = await POST(new Request('https://s.test/api/run', { method: 'POST', body: JSON.stringify({ task: 'Hi' }) }), env);
+  assert.equal((await plain.json()).output, 'Plain answer');
+  const none = await POST(new Request('https://s.test/api/run', { method: 'POST', body: JSON.stringify({ task: 'Hi' }) }), {});
+  assert.equal(none.status, 503);
+});

@@ -19,7 +19,7 @@ export default {
     if (!api) return env.ASSETS.fetch(request);
     const handler = api[request.method];
     if (!handler) return new Response('Method Not Allowed', { status: 405, headers: SECURITY_HEADERS });
-    const response = await handler(request);
+    const response = await handler(request, env);
     const headers = new Headers(response.headers);
     for (const [k, v] of Object.entries(SECURITY_HEADERS)) headers.set(k, v);
     return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
