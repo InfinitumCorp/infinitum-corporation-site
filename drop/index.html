@@ -1,0 +1,231 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Genesis Drop | Infinitum Corporation</title><meta name="description" content="The Genesis Drop: every public Infinitum token goes live on Solana at 00:00 UTC on 1 January 2027. Register a Solana address to lock your early-viewer number."><link rel="canonical" href="https://infinitumcorporation.ai/drop"><link rel="icon" href="/brand/icon-white-bg.png"><link rel="stylesheet" href="/assets/one-page.css"><!-- seo --><meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"><link rel="alternate" hreflang="en-us" href="https://infinitumcorporation.ai/drop"><link rel="alternate" hreflang="x-default" href="https://infinitumcorporation.ai/drop"><meta property="og:type" content="article"><meta property="og:site_name" content="Infinitum Corporation"><meta property="og:locale" content="en_US"><meta property="og:title" content="The Genesis Drop"><meta property="og:description" content="The Genesis Drop: every public Infinitum token goes live on Solana at 00:00 UTC on 1 January 2027. Register a Solana address to lock your early-viewer number."><meta property="og:url" content="https://infinitumcorporation.ai/drop"><meta property="og:image" content="https://infinitumcorporation.ai/brand/og-card.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Infinitum Corporation logo. AI-powered. Blockchain-governed."><meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content="@infinitumCorpUS"><meta name="twitter:title" content="The Genesis Drop"><meta name="twitter:description" content="The Genesis Drop: every public Infinitum token goes live on Solana at 00:00 UTC on 1 January 2027. Register a Solana address to lock your early-viewer number."><meta name="twitter:image" content="https://infinitumcorporation.ai/brand/og-card.png"><meta name="twitter:image:alt" content="Infinitum Corporation logo"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://infinitumcorporation.ai/drop#webpage","url":"https://infinitumcorporation.ai/drop","name":"The Genesis Drop","description":"The Genesis Drop: every public Infinitum token goes live on Solana at 00:00 UTC on 1 January 2027. Register a Solana address to lock your early-viewer number.","inLanguage":"en-US","isPartOf":{"@id":"https://infinitumcorporation.ai/#website"},"about":{"@id":"https://infinitumcorporation.ai/#organization"},"primaryImageOfPage":{"@type":"ImageObject","url":"https://infinitumcorporation.ai/brand/og-card.png"},"dateModified":"2026-11-08","breadcrumb":{"@id":"https://infinitumcorporation.ai/drop#breadcrumb"}},{"@type":"BreadcrumbList","@id":"https://infinitumcorporation.ai/drop#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://infinitumcorporation.ai/"},{"@type":"ListItem","position":2,"name":"The Genesis Drop","item":"https://infinitumcorporation.ai/drop"}]},{"@type":"Organization","@id":"https://infinitumcorporation.ai/#organization","name":"Infinitum Corporation","url":"https://infinitumcorporation.ai/","logo":"https://infinitumcorporation.ai/brand/stacked-dark.png"}]}</script><link rel="apple-touch-icon" href="/brand/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest"><!-- /seo --></head><body><header class="one-header"><a href="/#overview" aria-label="Infinitum Corporation home"><img src="/brand/horizontal-white-bg.png" width="188" height="28" alt="Infinitum Corporation"><sup class="logo-mark">®</sup></a><nav aria-label="Main navigation"><a href="/#services">Services</a><a href="/#products">Products</a><a href="/#warfare">Warfare &amp; Defense</a><a href="/#portfolio">Research & Clients</a><a href="https://downloads.infinitumcorporation.ai/">Downloads</a></nav><a class="one-contact" href="/#contact">Let’s talk</a></header><style>
+/* Genesis Drop (/drop). Builds on one-page.css tokens: --ink --muted --line --accent --paper. Solana green is the site's .net-sol. */
+.drop{--sol:#0f8a6a;--sol-soft:#0f8a6a1a;--mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+.drop .num{font-variant-numeric:tabular-nums}
+.drop-hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:6vw;align-items:center}
+.drop-hero h1{margin-top:0}
+.drop-lede{font-size:20px;color:var(--muted);max-width:34em;margin:0 0 30px}
+.drop-actions{display:flex;flex-wrap:wrap;align-items:center;gap:14px 22px}
+.drop-btn{display:inline-flex;align-items:center;gap:10px;padding:13px 24px;border:1px solid var(--ink);background:var(--ink);color:#fff;font:inherit;font-size:14px;text-decoration:none;cursor:pointer}
+.drop-btn:hover{background:#000}
+.drop-btn.ghost{background:transparent;color:var(--ink)}
+.drop-btn.ghost:hover{background:#f3f5f7}
+.drop-btn:disabled{opacity:.45;cursor:not-allowed}
+.drop-live{display:inline-flex;align-items:center;gap:9px;font-size:14px;color:var(--muted)}
+.drop-live i{width:7px;height:7px;border-radius:50%;background:var(--sol);animation:drop-pulse 2s infinite}
+@keyframes drop-pulse{0%{box-shadow:0 0 0 0 #0f8a6a88}70%{box-shadow:0 0 0 8px #0f8a6a00}100%{box-shadow:0 0 0 0 #0f8a6a00}}
+
+.drop-clock{margin-top:44px}
+.drop-clock-head{display:flex;justify-content:space-between;gap:12px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.drop-clock-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--ink)}
+.drop-clock-row div{padding:14px 0 0}
+.drop-clock-row div+div{border-left:1px solid var(--line);padding-left:16px}
+.drop-clock-row b{display:block;font-weight:400;font-size:clamp(40px,5.4vw,76px);line-height:1;letter-spacing:-.05em;font-variant-numeric:tabular-nums}
+.drop-clock-row span{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.drop-clock p{font-size:14px;color:var(--muted);margin:14px 0 0}
+
+/* moving Nexus wheel (shape and colours from /tokens) */
+.drop-wheel{perspective:1200px;min-width:0}
+.drop-wheel-tilt{transform-style:preserve-3d;transition:transform .7s var(--m-ease,ease)}
+.drop-wheel .nexus-map{display:block}
+.drop-wheel .nexus-ring{fill:none}
+.drop-wheel .nexus-orbit{fill:none;stroke:var(--line);stroke-width:1;stroke-dasharray:2 8}
+.drop-wheel .nexus-spoke{stroke:#0f8a6a66;transition:opacity .3s}
+.drop-wheel .nexus-node{color:var(--sol);cursor:pointer;outline:none}
+.drop-wheel .nexus-node circle{fill:#fff;stroke:currentColor;stroke-width:2}
+.drop-wheel .nexus-node text{font-size:17px;text-anchor:middle;dominant-baseline:central;fill:var(--ink)}
+.drop-wheel .nexus-node.on circle,.drop-wheel .nexus-node:focus-visible circle{fill:currentColor}
+.drop-wheel .nexus-node.on text,.drop-wheel .nexus-node:focus-visible text{fill:#fff}
+.drop-wheel .packet{fill:var(--sol)}
+.drop-wheel .hub-halo{fill:none;stroke:var(--ink);stroke-width:1}
+.drop-cap{min-height:3.2em;text-align:center;font-size:15px;color:var(--muted);margin:10px auto 0;max-width:30em}
+.drop-cap b{color:var(--ink);font-weight:500}
+
+/* tiers */
+.drop-tiers{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--ink)}
+.drop-tiers li{padding:26px 24px 6px 0;position:relative}
+.drop-tiers li+li{padding-left:24px;border-left:1px solid var(--line)}
+.drop-tiers .mult{font-size:clamp(48px,5vw,72px);letter-spacing:-.05em;line-height:1}
+.drop-tiers h3{font-size:26px;letter-spacing:-.03em;margin:14px 0 4px}
+.drop-tiers .range{font-size:13px;color:var(--accent)}
+.drop-tiers p{font-size:15px;color:var(--muted);margin:12px 0 16px}
+.drop-meter{height:3px;background:var(--line)}
+.drop-meter i{display:block;height:100%;width:0;background:var(--ink);transition:width 1.2s var(--m-ease,ease)}
+.drop-tiers small{display:block;font-size:13px;color:var(--muted);margin-top:8px}
+.drop-tiers .flag{position:absolute;top:26px;right:0;font-size:11px;letter-spacing:.06em;padding:4px 8px;background:var(--ink);color:#fff;visibility:hidden}
+.drop-tiers li+li .flag{right:0}
+.drop-tiers li.now .flag{visibility:visible}
+
+/* lineup */
+.drop-lineup{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border-top:1px solid var(--ink);border-left:1px solid var(--line)}
+.drop-coin{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:22px 18px;display:grid;gap:10px;align-content:start;text-decoration:none;color:inherit;min-width:0;transition:background .25s}
+.drop-coin:hover{background:#f6f8f9}
+.drop-coin .net-badge{justify-self:start}
+.drop-coin .t{font-size:26px;letter-spacing:-.03em}
+.drop-coin .p{font-size:13px;color:var(--muted)}
+.drop-coin .m{font-size:15px}
+.drop-coin.hub{background:var(--sol-soft)}
+
+/* register */
+.drop-reg{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:6vw;align-items:start}
+.drop-form{display:grid;gap:26px}
+.drop-form fieldset{border:0;margin:0;padding:0}
+.drop-form legend,.drop-form label{font-size:14px;color:var(--muted);padding:0;margin-bottom:12px;display:block}
+.drop-picks{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.drop-pick input{position:absolute;opacity:0;pointer-events:none}
+.drop-pick label{margin:0;display:flex;align-items:center;gap:8px;border:1px solid var(--line);padding:10px 12px;font-size:14px;color:var(--ink);cursor:pointer;user-select:none}
+.drop-pick label::before{content:"";width:8px;height:8px;border-radius:50%;border:1px solid var(--sol);flex:none}
+.drop-pick input:checked+label{border-color:var(--ink)}
+.drop-pick input:checked+label::before{background:var(--sol)}
+.drop-pick input:focus-visible+label{outline:2px solid var(--accent);outline-offset:2px}
+.drop-tools{display:flex;gap:18px;margin-top:10px}
+.drop-link{background:none;border:0;padding:0;font:inherit;font-size:13px;color:var(--muted);text-decoration:underline;text-underline-offset:4px;cursor:pointer}
+.drop-addr{display:flex;gap:10px}
+.drop-addr input{flex:1;min-width:0;font:15px var(--mono);padding:13px 14px;border:1px solid var(--line);background:#fff;color:var(--ink)}
+.drop-addr input:focus{outline:none;border-color:var(--ink)}
+.drop-hint{font-size:13px;color:var(--muted);margin:8px 0 0}
+.drop-bad input{border-color:#b4541a}
+.drop-bad .drop-hint{color:#b4541a}
+.drop-note{font-size:13px;color:var(--muted);margin:0}
+.drop-status{font-size:14px;min-height:1.5em}
+.drop-status.err{color:#b4541a}
+
+.drop-ticket{border:1px solid var(--ink);background:#fff}
+.drop-ticket header{display:flex;justify-content:space-between;gap:10px;padding:14px 18px;border-bottom:1px dashed var(--line);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.drop-ticket .body{padding:22px 18px;display:grid;gap:16px}
+.drop-ticket .no{font-size:clamp(56px,6.5vw,92px);letter-spacing:-.06em;line-height:.95;font-variant-numeric:tabular-nums}
+.drop-ticket dl{display:grid;grid-template-columns:auto 1fr;gap:6px 18px;margin:0;font-size:14px}
+.drop-ticket dt{color:var(--muted)}
+.drop-ticket dd{margin:0;min-width:0;overflow-wrap:anywhere}
+.drop-ticket footer{border-top:1px dashed var(--line);padding:12px 18px;display:flex;flex-wrap:wrap;gap:6px}
+.drop-ticket footer span{font-size:11px;letter-spacing:.04em;padding:3px 7px;border:1px solid var(--sol);color:var(--sol)}
+.drop-ticket.example{opacity:.6}
+
+/* timeline */
+.drop-timeline{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border-top:1px solid var(--ink)}
+.drop-timeline li{position:relative;padding:24px 18px 0 0}
+.drop-timeline li::before{content:"";position:absolute;top:-6px;left:0;width:11px;height:11px;border-radius:50%;background:#fff;border:1.5px solid var(--ink)}
+.drop-timeline li.done::before{background:var(--ink)}
+.drop-timeline li.key::before{background:var(--sol);border-color:var(--sol)}
+.drop-timeline time{font-size:13px;color:var(--accent)}
+.drop-timeline h3{font-size:22px;letter-spacing:-.03em;margin:10px 0 6px}
+.drop-timeline p{font-size:15px;color:var(--muted);margin:0}
+
+.drop-faq details{border-bottom:1px solid var(--line);padding:20px 0}
+.drop-faq details:first-child{border-top:1px solid var(--ink)}
+.drop-faq summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:20px;font-size:20px;letter-spacing:-.02em}
+.drop-faq summary::-webkit-details-marker{display:none}
+.drop-faq summary::after{content:"+";color:var(--muted)}
+.drop-faq details[open] summary::after{content:"\2212"}
+.drop-faq details p{color:var(--muted);max-width:44em;margin:12px 0 0}
+.drop-legal{font-size:13px;color:var(--muted);max-width:60em;margin-top:40px}
+
+@media (max-width:1000px){.drop-lineup{grid-template-columns:repeat(2,minmax(0,1fr))}.drop-picks{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:900px){.drop-hero,.drop-reg{grid-template-columns:1fr}.drop-tiers,.drop-timeline{grid-template-columns:1fr}.drop-tiers li,.drop-tiers li+li{padding:22px 0;border-left:0;border-top:1px solid var(--line)}.drop-tiers li:first-child{border-top:0}.drop-timeline{border-top:0;border-left:1px solid var(--ink);padding-left:22px;gap:26px}.drop-timeline li{padding:0}.drop-timeline li::before{top:4px;left:-28px}}
+@media (max-width:560px){.drop-picks{grid-template-columns:repeat(2,minmax(0,1fr))}.drop-clock-row div+div{padding-left:10px}.drop-addr{flex-direction:column}}
+@media (prefers-reduced-motion:reduce){.drop-live i{animation:none}}
+.motion-paused .drop-live i{animation:none}
+</style>
+<main id="main" class="drop" data-api="https://infinitum-revenue.infinitumcorp.workers.dev">
+<section class="one-section">
+  <div class="one-section-heading"><p class="one-label">Tokens / The Genesis Drop &middot; Solana</p></div>
+  <div class="drop-hero">
+    <div>
+      <h1>Ten tokens.<br>One midnight.</h1>
+      <p class="drop-lede">At 00:00 UTC on 1 January 2027, every public Infinitum token goes live on Solana at once, and early viewers get dropped first. Register a Solana address now. Your place in line sets your tier.</p>
+      <div class="drop-actions">
+        <a class="drop-btn" href="#register">Claim your spot</a>
+        <a class="one-textlink" href="#lineup">See the lineup</a>
+        <span class="drop-live" aria-live="polite"><i></i><span id="drop-count">Counting early viewers&hellip;</span></span>
+      </div>
+      <div class="drop-clock" aria-label="Countdown to the Genesis Drop">
+        <div class="drop-clock-head"><span id="drop-tminus">T-minus</span><span class="num" id="drop-utc">UTC</span></div>
+        <div class="drop-clock-row">
+          <div><b id="cd-d">--</b><span>Days</span></div>
+          <div><b id="cd-h">--</b><span>Hours</span></div>
+          <div><b id="cd-m">--</b><span>Min</span></div>
+          <div><b id="cd-s">--</b><span>Sec</span></div>
+        </div>
+        <p id="drop-local">1 January 2027, 00:00 UTC.</p>
+      </div>
+    </div>
+    <div class="drop-wheel" id="drop-wheel">
+      <div class="drop-wheel-tilt" id="drop-tilt">
+        <svg class="nexus-map" id="drop-nexus" viewBox="0 0 800 800" role="group" aria-label="The Infinitum Nexus on Solana: every product token in the drop connects to FIRM"></svg>
+      </div>
+      <p class="drop-cap" id="drop-cap">Every product token settles through <b>$FIRM<sup class="tm">&trade;</sup></b> on Solana. Point at a token to see it.</p>
+    </div>
+  </div>
+</section>
+
+<section class="one-section" id="how">
+  <div class="one-section-heading"><p class="one-label">How the drop works</p><h2>Show up early. Get dropped first.</h2></div>
+  <ol class="token-flow">
+    <li><span>01</span><h3>Register</h3><p>Pick the tokens you want and add a Solana address you control.</p></li>
+    <li><span>02</span><h3>Lock your number</h3><p>Your early-viewer number is fixed the moment you register. Earlier numbers earn bigger multipliers.</p></li>
+    <li><span>03</span><h3>Snapshot</h3><p>Registration closes on 31 December at 23:00 UTC. Allocations come from the final roster.</p></li>
+    <li><span>04</span><h3>Midnight drop</h3><p>Tokens land on Solana at 00:00 UTC and are claimable in <a href="/products/firm#wallet">$FIRM Wallet<sup class="tm">&trade;</sup></a>.</p></li>
+  </ol>
+</section>
+
+<section class="one-section" id="tiers">
+  <div class="one-section-heading"><p class="one-label">Early-viewer tiers</p><h2>Your number is your multiplier.</h2><p>Every registered wallet gets a base share of each token's drop pool. Tier multipliers apply on top. The tier marked <b>Open now</b> is where the next registration lands.</p></div>
+  <ol class="drop-tiers" id="drop-tiers"></ol>
+</section>
+
+<section class="one-section" id="lineup">
+  <div class="one-section-heading"><p class="one-label">The lineup &middot; all on Solana</p><h2>Every public token. Same midnight.</h2><p>Each product token pairs with $FIRM<sup class="tm">&trade;</sup> from the first block. ODIN&deg;<sup class="tm">&trade;</sup> runs on a private ledger and is not part of the drop.</p></div>
+  <div class="drop-lineup" id="drop-lineup"></div>
+</section>
+
+<section class="one-section" id="register">
+  <div class="drop-reg">
+    <div>
+      <div class="one-section-heading"><p class="one-label">Register for the drop</p><h2>Lock your early-viewer number.</h2></div>
+      <form class="drop-form" id="drop-form" novalidate>
+        <fieldset>
+          <legend>Tokens to receive</legend>
+          <div class="drop-picks" id="drop-picks"></div>
+          <div class="drop-tools"><button type="button" class="drop-link" id="drop-all">Select all</button><button type="button" class="drop-link" id="drop-none">Clear</button></div>
+        </fieldset>
+        <div id="drop-addr-field">
+          <label for="drop-wallet">Solana address</label>
+          <div class="drop-addr">
+            <input id="drop-wallet" name="wallet" autocomplete="off" spellcheck="false" placeholder="e.g. 7xKX…9fQa">
+            <button type="button" class="drop-btn ghost" id="drop-connect" hidden>Use my wallet</button>
+          </div>
+          <p class="drop-hint" id="drop-hint">Your public receiving address from $FIRM Wallet&trade; or any Solana wallet.</p>
+        </div>
+        <p class="drop-note">We only ever need your public address. Infinitum never asks for a seed phrase or private key, here or anywhere else.</p>
+        <div class="drop-actions"><button class="drop-btn" type="submit" id="drop-submit">Lock my number</button><span class="drop-status" id="drop-status" role="status"></span></div>
+      </form>
+    </div>
+    <div id="drop-ticket"></div>
+  </div>
+</section>
+
+<section class="one-section" id="timeline">
+  <div class="one-section-heading"><p class="one-label">Timeline &middot; all times UTC</p><h2>From now to the first block of 2027.</h2></div>
+  <ol class="drop-timeline">
+    <li class="done"><time>Now</time><h3>Registration open</h3><p>Lock your early-viewer number.</p></li>
+    <li><time>15 Dec 2026</time><h3>Final terms</h3><p>Pool sizes and claim rules published.</p></li>
+    <li><time>31 Dec 2026 &middot; 23:00</time><h3>Snapshot</h3><p>The roster freezes. Address edits close.</p></li>
+    <li class="key"><time>1 Jan 2027 &middot; 00:00</time><h3>The drop</h3><p>All ten tokens go live on Solana at once.</p></li>
+    <li><time>31 Mar 2027</time><h3>Claim window closes</h3><p>Unclaimed tokens return to each pool.</p></li>
+  </ol>
+</section>
+
+<section class="one-section" id="faq">
+  <div class="one-section-heading"><p class="one-label">Questions</p><h2>Before you register</h2></div>
+  <div class="drop-faq">
+    <details><summary>Does it cost anything?</summary><p>No. Registration is free and no purchase is needed to receive the drop. Claiming only costs the usual Solana network fee, a fraction of a cent.</p></details>
+    <details><summary>Why Solana?</summary><p>Every Infinitum token, $FIRM included, is issued on Solana: fast settlement and sub-cent fees for high-volume product rewards, all in one wallet.</p></details>
+    <details><summary>Can I change my tokens after registering?</summary><p>Yes, until the snapshot. Register the same address again with new picks and your early-viewer number stays the same.</p></details>
+    <details><summary>How is my allocation calculated?</summary><p>Each token reserves a drop pool. It is split across every registered wallet that picked that token, weighted by tier multiplier. Pool sizes are published with the final terms on 15 December.</p></details>
+    <details><summary>Where do I claim?</summary><p>In $FIRM Wallet&trade; or any Solana wallet, from 00:00 UTC on 1 January 2027 until the claim window closes on 31 March.</p></details>
+    <details><summary>Will anyone message me about the drop?</summary><p>No. Infinitum will never message you first, ask for a seed phrase, or ask you to send tokens to receive tokens. Treat any message like that as a scam and report it.</p></details>
+  </div>
+  <p class="drop-legal">Tokens distributed in the Genesis Drop are utility tokens for use within Infinitum products. They are not an investment, carry no promise of value or return, and are not offered where prohibited. Pools, tiers and dates are subject to final terms published before the snapshot.</p>
+</section>
+</main>
+<footer class="one-footer"><a href="/#overview" aria-label="Back to top"><img src="/brand/horizontal-white-bg.png" width="188" height="28" alt="Infinitum Corporation"><sup class="logo-mark">®</sup></a><div><a href="/about">About</a><a href="/mission">Mission</a><a href="/industries">Industries</a><a href="/insights">Insights</a><a href="/press">Press</a><a href="/careers">Careers</a><a href="/strategic-partners">Partners</a><a href="/tokens">Tokens</a><a href="https://downloads.infinitumcorporation.ai/">Downloads</a><a href="https://infinitum-academy.whop.site/" target="_blank" rel="noopener">School<span class="visually-hidden"> (opens in a new tab)</span></a><a href="https://infinitumdefense.com/" target="_blank" rel="noopener">Defense<span class="visually-hidden"> (opens in a new tab)</span></a></div><span>AI-powered. Blockchain-governed<sup class="tm">™</sup>.</span><span class="footer-security" data-lingo="security">Military-grade security for high-security civilians and businesses.</span><span>© 2026 Infinitum Corporation</span><span class="legal-links"><a href="/privacy-policy">Privacy</a><a href="/terms-of-use">Terms</a><a href="/legal/open-source">Open source</a><a href="/investor-relations">Investors</a><a href="/supplier-relations">Suppliers</a><a href="/site-map">Site map</a></span><button type="button" id="one-motion" aria-pressed="false">Pause motion</button></footer><script src="/assets/motion.js" defer></script><script src="/assets/drop.js" defer></script></body></html>
