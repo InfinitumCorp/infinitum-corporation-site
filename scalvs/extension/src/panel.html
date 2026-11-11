@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SCALVS.ai</title>
+  <link rel="stylesheet" href="shell.css" />
+  <link rel="stylesheet" href="panel.css" />
+</head>
+<body>
+  <header class="app-bar">
+    <a class="app-wordmark" id="home" href="#" target="_blank" rel="noopener">SCALVS.ai<sup class="tm">™</sup></a>
+    <nav class="app-actions">
+      <button class="link" type="button" id="new-chat">New chat</button>
+      <a href="options.html" target="_blank">Options</a>
+    </nav>
+  </header>
+
+  <main class="app-main chat">
+    <div id="notice" class="notice" hidden></div>
+    <ol class="messages" id="messages" aria-live="polite">
+      <li class="empty" id="empty">Ask anything. Right-click a page or a selection to send it here.</li>
+    </ol>
+  </main>
+
+  <form class="composer" id="composer">
+    <div class="attachment" id="attachment" hidden>
+      <span class="small muted" id="attachment-label"></span>
+      <button class="link small" type="button" id="drop-attachment">Remove</button>
+    </div>
+    <label class="label" for="question">Message</label>
+    <textarea class="input" id="question" rows="3" placeholder="Ask SCALVS.ai" required></textarea>
+    <div class="row">
+      <button class="btn" type="button" id="attach-page" title="Include the current tab's text">Add this page</button>
+      <span style="flex:1"></span>
+      <button class="btn" type="button" id="stop" hidden>Stop</button>
+      <button class="btn primary" type="submit" id="send">Send</button>
+    </div>
+  </form>
+  <script type="module" src="panel.js"></script>
+</body>
+</html>
