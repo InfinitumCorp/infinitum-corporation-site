@@ -1,0 +1,183 @@
+# Infinitum Corporation: full reference
+
+> AI-powered services and blockchain-governed products for business, government and defense, with military-grade security for high-security civilians and businesses. Headquartered at 1629 K Street NW, Suite 300, Washington, D.C. 20006, United States. Contact: info@infinitumcorporation.ai, (202) 729-9509.
+
+Short summary: https://infinitumcorporation.ai/llms.txt
+Downloads: https://downloads.infinitumcorporation.ai/
+Site map: https://infinitumcorporation.ai/site-map
+
+## Company
+
+- Name: Infinitum Corporation
+- Founder and President: William Aaron Turner
+- Headquarters: 1629 K Street NW, Suite 300, Washington, D.C. 20006
+- Website: https://infinitumcorporation.ai/
+- Positioning: AI-powered. Blockchain-governed.
+- Clients: businesses, government agencies and military organizations
+- Ownership: privately held
+- Profiles: https://x.com/infinitumCorpUS, https://github.com/InfinitumCorp, https://www.instagram.com/infinitumcorporation
+
+Infinitum consults, builds and delivers. Clients hire Infinitum for a defined outcome, and Infinitum owns the project that gets them there in four steps:
+
+1. Consult: learn how the organization works today, its goals, systems, constraints and the outcome it is paying for.
+2. Design: build the plan, matching Infinitum products such as SCALVS.ai™, Cumulus://Cloud™ and FabriC++™ to existing systems, with a clear scope, timeline and budget.
+3. Deliver: run the project end to end, including people, vendors, schedule, budget, security and reporting.
+4. Support: train people, hand the work over or keep operating it, and keep improving it.
+
+## Capabilities
+
+- [Counter-Drone Systems](https://infinitumcorporation.ai/capabilities/counter-drone-systems): layered counter-drone defense for authorized military organizations only. Detect with E(O)N MIL™ and >_ARGUS MIL™, decide through ODIN°™ with an operator approving every engagement, defeat with AZRAIL MIL™ interceptors and E(O)N MIL™ electronic warfare, and record every engagement.
+- [Secure Communications](https://infinitumcorporation.ai/capabilities/secure-communications): end-to-end encrypted messaging, voice and video with FabriC++™, a no-logs VPN with VEIL</>™ VPN, private browsing with VEIL</>™, and private email with Cumulus://Mail™. ÆTHER MIL™ serves authorized military and defense organizations only.
+- [AI Workflow Automation](https://infinitumcorporation.ai/capabilities/ai-workflow-automation): process design, systems integration, deployment and ongoing support with SCALVS.ai™, :\ARCHITECT\™ and +SPCTR™, with human review points and permissioned access built in.
+- [Secure AI Infrastructure](https://infinitumcorporation.ai/capabilities/secure-ai-infrastructure): #THRONE™ AI computers secured from the chip up, Cumulus://Cloud™ storage, compute and databases, and $Firmament Network™ for identity, provenance, licensing and audit.
+
+## Products for people, businesses and government
+
+### VEIL</>™
+- Page: https://infinitumcorporation.ai/products/veil and https://infinitumveil.app/
+- What it is: Infinitum's free, Tor-first secure browser and the front door to the Infinitum ecosystem: private browsing, built-in AI, email, encrypted storage, $FIRM Wallet™ and $VEIL rewards in one app.
+- Platforms: Windows, macOS, Linux and ChromeOS through the VEIL</>™ for Chrome extension; Android as a native app.
+- Ticker: $VEIL
+
+### VEIL</>™ VPN
+- Site: https://infinitumveilvpn.app/
+- What it is: Infinitum's free VPN: WireGuard, IKEv2 and OpenVPN with no logs, tracker blocking and Tor over VPN. Privacy-safe ads pay for it, and half or more of the ad revenue goes back to the people who use it, in $VEIL.
+- Platforms: Android, Chrome and Edge.
+
+### FabriC++™
+- Page: https://infinitumcorporation.ai/products/fabric
+- What it is: Infinitum's secure communications platform: encrypted messaging, voice and video with AI built in, and an opt-in data economy that shares revenue with the people who create it.
+
+### Cumulus://Cloud™
+- Page: https://infinitumcorporation.ai/products/cumulus-exchange
+- What it is: Infinitum's AI-native cloud: storage, compute, databases and AI infrastructure for individuals, businesses, developers and governments, with an opt-in exchange that turns eligible data into revenue.
+- Includes Cumulus://Mail™ at your own @cumuluscloud.app address and Cumulus Drive™. One Cumulus://ID™ (CID) signs you in to every Infinitum app.
+
+### SCALVS.ai™
+- Page: https://infinitumcorporation.ai/products/scalus and https://scalvs.app/
+- What it is: Infinitum's AI workforce platform: build agents that research, write, code, sell and operate for you, in any browser, and share in the value they create.
+
+### :\ARCHITECT\™
+- Page: https://infinitumcorporation.ai/products/architect
+- What it is: Infinitum's AI execution workspace. Describe an outcome; :\ARCHITECT\™ plans it, builds it, runs it across your apps and proves it is done.
+
+### +SPCTR™ (Spectre)
+- Page: https://infinitumcorporation.ai/products/spectre
+- What it is: Infinitum's AI-powered intelligent CRM. It researches every account for you, predicts what each relationship needs next, and puts AI agents to work on the busywork.
+
+### METATRON¹⁰⁰™
+- Page: https://infinitumcorporation.ai/products/metatron and https://mttrn.app/
+- What it is: the consumer version of ODIN°™: every Infinitum product in one AI command center for your life, your home and your business.
+
+### [HRVST]™ (Harvest)
+- Page: https://infinitumcorporation.ai/products/hrvst
+- What it is: turns what you see into value. Capture with camera glasses, let AI refine it into useful, privacy-filtered observations, and license them, or keep them private, on your terms.
+
+### #THRONE™
+- Page: https://infinitumcorporation.ai/products/throne
+- What it is: Infinitum's line of AI computers: laptops, towers and rack servers with the Infinitum ecosystem built in, secured from the chip up and ready to run AI on the device.
+
+### $Firmament Network™
+- Page: https://infinitumcorporation.ai/products/firmament-network
+- What it is: the trust layer of the Infinitum ecosystem: one blockchain for identity, provenance, licensing, payments and audit across every product. Built into every Infinitum app.
+
+### $FIRM™ and $FIRM Wallet™
+- Page: https://infinitumcorporation.ai/products/firm
+- What it is: $FIRM™ is the nexus token of $Firmament Network™, and $FIRM Wallet™ is where it and every Infinitum token live: a standard self-custody wallet with a built-in decentralized exchange.
+- Ticker: $FIRM
+
+### Project-specific tokens
+- Page: https://infinitumcorporation.ai/products/project-tokens and https://infinitumcorporation.ai/tokens
+- What they are: every major Infinitum product has its own token, paired with $FIRM™ and held in $FIRM Wallet™, so each product's economy can grow on its own while staying connected to the whole.
+
+## Military and defense: authorized organizations only
+
+Military editions are delivered only through ODIN°™, on closed, accredited infrastructure, to authorized military and defense organizations of the United States and approved allied governments, subject to U.S. export controls. They are never offered as public downloads and sit outside the token economy. Infinitum drones and ei·det·ic™ are for the military only.
+
+### ODIN°™
+- Page: https://infinitumcorporation.ai/products/odin
+- What it is: the complete Infinitum suite, unified into one command, intelligence and autonomy system for military use only. Every system reaches commanders as one clear picture and AI-supported options, with people in command of every decision and every decision on record.
+- Decision cycle: Observe, Orient, Decide, Act.
+
+### AZRAIL MIL™
+- Page: https://infinitumcorporation.ai/products/azrail
+- What it is: an autonomous counter-drone aircraft that patrols the sky over a unit, finds hostile drones and swarms, and stops them by direct impact or capture, with an operator approving every engagement. The counter-drone class of the DAEMON™ drone series.
+- Specifications:
+  - Role: autonomous counter-drone aircraft
+  - Launch: rail or canister from vehicles, SLUG MIL™ and sites
+  - Endurance: up to 40 minutes on patrol
+  - Speed: up to 300 km/h
+  - Defeat: direct impact or net capture, no explosive
+  - Cueing: E(O)N MIL™, >_ARGUS MIL™ and site radar, with an onboard seeker
+  - Teaming: up to 24 aircraft defend together against swarms
+  - Recovery: returns or parachutes for reuse when no engagement is needed
+  - Command: operator approves each engagement through ODIN°™
+
+### E(O)N MIL™
+- Page: https://infinitumcorporation.ai/products/eon
+- What it is: Infinitum's wearable electronic-warfare and counter-drone platform, part of ODIN°™.
+
+### >_ARGUS MIL™
+- Page: https://infinitumcorporation.ai/products/argus
+- What it is: Infinitum's AI sensor-fusion system: the Observe layer of ODIN°™, turning every drone, sensor and field feed into one live picture.
+
+### ÆTHER MIL™
+- Page: https://infinitumcorporation.ai/products/aether
+- What it is: Infinitum's secure voice, text, data and mesh networking system, the communications layer of ODIN°™.
+
+### DAEMON™ drone series
+- Page: https://infinitumcorporation.ai/products/daemon
+- What it is: Infinitum's drone series, for the military only: CHERUBIM™ for quick-reaction overwatch and close-quarters reconnaissance, SERAPHIM™ for long-endurance reconnaissance and patrol, and AZRAIL MIL™ for counter-drone defense.
+- CHERUBIM™ (https://infinitumcorporation.ai/products/cherubim): three military drones: CHERUBIM™ 1 for quick reaction, CHERUBIM™ 2 for tethered overwatch and CHERUBIM™ 3 for indoor tactical reconnaissance.
+- SERAPHIM™ (https://infinitumcorporation.ai/products/seraphim): long-endurance vertical-takeoff aircraft for wide-area reconnaissance and patrol.
+
+### Other military drones
+- ORBIS™ (https://infinitumcorporation.ai/products/orbis): spherical drone with a 220 mm protective frame around an AI core, built to fly inside buildings, tunnels, tanks and tight spaces.
+- POLLEN™ (https://infinitumcorporation.ai/products/pollen): a swarm of palm-sized autonomous aircraft that share one mission, map large areas fast and keep working when individual aircraft drop out.
+- Flower™ (https://infinitumcorporation.ai/products/flower): the smart base station for POLLEN™. It launches, recovers, charges, updates and protects the swarm.
+- SLUG™ (https://infinitumcorporation.ai/products/slug): autonomous tracked ground vehicle that carries loads, watches ground and extends the network.
+
+### ei·det·ic™
+- Page: https://infinitumcorporation.ai/products/eidetic
+- What it is: Infinitum's identity-intelligence platform for authorized military and defense organizations: AI identity matching with consent, purpose controls and a tamper-evident record of every search.
+
+## Questions and answers
+
+Q: What does Infinitum Corporation do?
+A: Infinitum provides AI-powered cybersecurity, intelligence, strategy and technology consulting for business, government and military organizations, and builds blockchain-governed software and hardware products. Clients hire Infinitum for an outcome, and Infinitum manages the project from first assessment to handover.
+
+Q: Where is Infinitum Corporation based?
+A: 1629 K Street NW, Suite 300, Washington, D.C. 20006, United States.
+
+Q: Who founded Infinitum Corporation?
+A: William Aaron Turner, Founder and President.
+
+Q: How do I contact Infinitum?
+A: Email info@infinitumcorporation.ai or call (202) 729-9509.
+
+Q: Does Infinitum publish prices?
+A: No. Contact the team to discuss your requirements.
+
+Q: Where can I download Infinitum apps?
+A: Every public Infinitum download is listed at https://downloads.infinitumcorporation.ai/. Builds marked preview are early releases. Military editions are never offered as public downloads.
+
+Q: Is VEIL</>™ free?
+A: Yes. VEIL</>™ and VEIL</>™ VPN are free to use.
+
+Q: What is the difference between VEIL</>™ and VEIL</>™ VPN?
+A: VEIL</>™ is a Tor-first secure browser. VEIL</>™ VPN is a no-logs VPN that protects your connection.
+
+Q: What is a Cumulus://ID™?
+A: One sign-in, also called a CID, that connects every Infinitum app. It includes $FIRM Suite™, Cumulus://Mail™ at your own @cumuluscloud.app address and Cumulus Drive™.
+
+Q: Can civilians or businesses buy Infinitum drones or counter-drone systems?
+A: No. Infinitum drones, counter-drone systems and ei·det·ic™ are for authorized military and defense organizations only, delivered through ODIN°™ and subject to U.S. export controls.
+
+Q: Do people stay in control of AI decisions in ODIN°™?
+A: Yes. ODIN°™ presents AI-supported options, people make every decision, and every decision is recorded.
+
+Q: What is $Firmament Network™ used for?
+A: It is the blockchain behind every Infinitum product, recording identity, provenance, licensing, payments and audit so records cannot be quietly changed.
+
+Q: Does Infinitum offer security research?
+A: Yes. Infinitum takes part in bug bounty and vulnerability disclosure programs. See https://infinitumcorporation.ai/security-research.

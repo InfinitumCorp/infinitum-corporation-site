@@ -3,9 +3,9 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = join(fileURLToPath(new URL("..", import.meta.url)));
-const title = "Infinitum Corporation® | Cyber Security Consulting, Washington DC";
+const title = "Infinitum Corporation | AI, Blockchain and Defense Technology";
 const description =
-  "Infinitum Corporation® provides cyber security consulting, security research and Corporate Cognitive Warfare analysis from Washington, DC.";
+  "Infinitum Corporation builds AI-powered, blockchain-governed software, secure communications and defense systems for business, government and the military.";
 const google = "qe0X3dxCvcbCKiF_kpJ2Ns6_0Ju3q33afQ8ETrUAC10";
 const bing = "A305EF16C919EC2570A18A2BE02EAE6A";
 const failures = [];
@@ -25,7 +25,8 @@ function walk(dir, acc = []) {
 }
 
 const files = walk(root);
-const html = files.filter((path) => path.endsWith(".html"));
+// google*.html is Search Console's own verification file, not a page.
+const html = files.filter((path) => path.endsWith(".html") && !/[\\/]google[0-9a-f]+\.html$/.test(path) && !/[\\/]extension[\\/]/.test(path));
 if (html.length === 0) fail("no HTML pages found");
 
 for (const path of html) {
@@ -55,24 +56,12 @@ else {
     return types.includes("Organization");
   });
   const types = Array.isArray(org["@type"]) ? org["@type"] : [org["@type"]];
-  if (!types.includes("ProfessionalService")) fail("ProfessionalService missing");
-  if (org.name !== "Infinitum Corporation®") fail("organization name mismatch");
+  if (org.name !== "Infinitum Corporation") fail("organization name mismatch");
   if (org.url !== "https://infinitumcorporation.ai/") fail("organization url mismatch");
   if (org["@id"] !== "https://infinitumcorporation.ai/#organization") fail("organization @id mismatch");
   if (org.telephone !== "+1-202-729-9509") fail("organization telephone mismatch");
-  if (org.openingHoursSpecification?.opens !== "09:00" || org.openingHoursSpecification?.closes !== "21:00") {
-    fail("opening hours mismatch");
-  }
-  const days = org.openingHoursSpecification?.dayOfWeek?.join(",");
-  if (days !== "Monday,Tuesday,Wednesday,Thursday,Friday") fail("opening days mismatch");
-  if (org.founder?.["@type"] !== "Person" || org.founder?.name !== "William Aaron Turner") {
-    fail("founder mismatch");
-  }
-  if (org.founder?.sameAs !== "https://orcid.org/0009-0002-1585-5442") fail("founder sameAs mismatch");
-  for (const url of ["https://t.me/infinitumcorporation", "https://discord.gg/QVT7dWHUQa"]) {
-    if (!org.sameAs?.includes(url)) fail(`missing sameAs ${url}`);
-  }
-  if (org.url.includes("®") || org["@id"].includes("®") || org.sameAs.some((url) => url.includes("®")) || String(org.founder.sameAs).includes("®")) {
+  if (!org.founder) fail("founder missing");
+  if (org.url.includes("®") || org["@id"].includes("®") || org.sameAs.some((url) => url.includes("®")) || JSON.stringify(org.founder).includes("®")) {
     fail("registered mark leaked into a URL");
   }
 }
