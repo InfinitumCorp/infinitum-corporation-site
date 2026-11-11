@@ -1,0 +1,16 @@
+body { display: flex; flex-direction: column; min-height: 100vh; }
+.chat { flex: 1; }
+.messages { list-style: none; margin: 0; padding: 0; }
+.messages > li { padding: 12px 0; border-top: 1px solid var(--line); }
+.messages > li:first-child { border-top: 0; }
+.who { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; color: var(--muted); font-size: 12px; }
+.text { white-space: pre-wrap; word-break: break-word; }
+.text.pending::after { content: "▍"; color: var(--muted); }
+.text.failed { color: var(--bad); }
+.source { margin-top: 4px; }
+.composer { position: sticky; bottom: 0; padding: 12px var(--gutter); background: var(--paper); border-top: 1px solid var(--line); }
+.composer textarea.input { min-height: 64px; margin-bottom: 8px; }
+.composer .label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.attachment { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 8px; padding: 6px 8px; border: 1px solid var(--line); }
+button.link { background: none; border: 0; padding: 0; color: var(--muted); cursor: pointer; }
+button.link:hover { color: var(--accent); }
