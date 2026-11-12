@@ -1,0 +1,43 @@
+# Deploys infinitumcorporation.ai to Cloudflare on every push to main.
+#
+# Runs the SEO checks first; a failed check stops the deploy.
+# Needs two repository secrets, added by a person:
+#   CLOUDFLARE_API_TOKEN   (Workers Scripts: Edit, Account: Read)
+#   CLOUDFLARE_ACCOUNT_ID
+# Without them the run says so and deploys nothing, instead of failing.
+name: Deploy site
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "scalvs/**"
+      - "**.md"
+  workflow_dispatch:
+concurrency:
+  group: deploy-site
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  deploy:
+    name: deploy-site
+    runs-on: ${{ vars.CI_RUNNER || 'ubuntu-latest' }}
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: SEO checks
+        run: node scripts/verify-seo.mjs
+      - name: Build dist/
+        run: node scripts/build-cloudflare.mjs
+      - name: Deploy to Cloudflare
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "CLOUDFLARE_API_TOKEN or CLOUDFLARE_ACCOUNT_ID is not set; nothing deployed." | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          npx -y wrangler@4 deploy --message "main ${GITHUB_SHA::7}"
