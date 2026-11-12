@@ -77,6 +77,10 @@ Infinitum consults, builds and delivers. Clients hire Infinitum for a defined ou
 - Page: https://infinitumcorporation.ai/products/throne
 - What it is: Infinitum's line of AI computers: laptops, towers and rack servers with the Infinitum ecosystem built in, secured from the chip up and ready to run AI on the device.
 
+### Nøde™
+- Page: https://infinitumcorporation.ai/products/node
+- What it is: Infinitum's community connectivity network: free Wi-Fi for everyone, anchored by fixed gateways with real internet uplinks and extended by participating hosts, phones and Nøde™ Home, Business, Relay and Gateway routers. Hosting is a separate, controlled choice; free access is funded by venues, sponsors and aggregated, privacy-checked network analytics.
+
 ### $Firmament Network™
 - Page: https://infinitumcorporation.ai/products/firmament-network
 - What it is: the trust layer of the Infinitum ecosystem: one blockchain for identity, provenance, licensing, payments and audit across every product. Built into every Infinitum app.
