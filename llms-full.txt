@@ -79,7 +79,7 @@ Infinitum consults, builds and delivers. Clients hire Infinitum for a defined ou
 
 ### Nøde™
 - Page: https://infinitumcorporation.ai/products/node
-- What it is: Infinitum's community connectivity network: free Wi-Fi for everyone, anchored by fixed gateways with real internet uplinks and extended by participating hosts, phones and Nøde™ Home, Business, Relay and Gateway routers. Hosting is a separate, controlled choice; free access is funded by venues, sponsors and aggregated, privacy-checked network analytics.
+- What it is: Infinitum's community connectivity network: free Wi-Fi for everyone, anchored by fixed gateways with real internet uplinks and extended by participating hosts, phones and Nøde™ Home, Business, Relay and Gateway routers. Built for every tier: civilian (homes, apartments), business (buildings, apartment complexes, venues), government (parks, public buildings) and military (bases, for authorized defense organizations). Hosting is a separate, controlled choice; free access is funded by venues, sponsors and aggregated, privacy-checked network analytics.
 
 ### $Firmament Network™
 - Page: https://infinitumcorporation.ai/products/firmament-network
