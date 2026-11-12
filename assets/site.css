@@ -245,3 +245,5 @@ html::-webkit-scrollbar-button{display:none}
 /* plans:end */
 
 .product-logo{display:block;width:48px;height:48px;background:#fff;border:1px solid #c8cbca;margin:0 0 18px}.product-logo-hero{width:72px;height:72px;margin-bottom:28px}.product-logo-sm{display:inline-block;width:36px;height:36px;margin:0 14px 0 0;vertical-align:middle}.download-item .product-logo-sm{display:block;width:40px;height:40px;margin:0}@media(max-width:480px){.product-logo-hero{width:56px;height:56px}.product-logo-sm{width:30px;height:30px;margin-right:10px}}
+/* Cumulus://ID account bar (https://id.cumuluscloud.app/id/bar.js) at the right end of the header; on narrow screens it wraps onto its own row, still on the right. */
+.cumulus-bar{display:inline-flex;align-items:center;flex-shrink:0;margin-left:auto;max-width:100%}

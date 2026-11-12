@@ -37,6 +37,10 @@ for (const path of html) {
   if (!text.includes(`name="msvalidate.01" content="${bing}"`)) {
     fail(`missing Bing verification: ${path}`);
   }
+  // Every page with a header carries the Cumulus://ID account bar.
+  if (text.includes("<header") && (!text.includes("data-cumulus-bar") || !text.includes("id.cumuluscloud.app/id/bar.js"))) {
+    fail(`missing Cumulus://ID account bar: ${path}`);
+  }
   if (text.includes("681-0120") || text.includes("12026810120")) {
     fail(`old phone remains: ${path}`);
   }
