@@ -16,7 +16,7 @@ function fail(message) {
 
 function walk(dir, acc = []) {
   for (const name of readdirSync(dir)) {
-    if (name === "node_modules" || name === ".git") continue;
+    if (name === "node_modules" || name === ".git" || name === "dist" || name === ".wrangler") continue;
     const path = join(dir, name);
     if (statSync(path).isDirectory()) walk(path, acc);
     else acc.push(path);

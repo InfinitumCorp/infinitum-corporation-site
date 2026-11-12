@@ -1,0 +1,19 @@
+{
+  // infinitumcorporation.ai: static files only, served by Workers static assets.
+  // dist/ is built by `node scripts/build-cloudflare.mjs`. The custom domain is
+  // attached in Cloudflare, so no routes are listed here (a deploy leaves it alone).
+  "name": "infinitum-corporation-site",
+  "compatibility_date": "2026-11-08",
+  "workers_dev": false,
+  "preview_urls": false,
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1,
+    "logs": { "enabled": true, "head_sampling_rate": 1, "invocation_logs": true, "persist": true }
+  },
+  "assets": {
+    "directory": "./dist",
+    "html_handling": "drop-trailing-slash",
+    "not_found_handling": "404-page"
+  }
+}
