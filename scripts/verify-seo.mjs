@@ -16,7 +16,7 @@ function fail(message) {
 
 function walk(dir, acc = []) {
   for (const name of readdirSync(dir)) {
-    if (name === "node_modules" || name === ".git") continue;
+    if (name === "node_modules" || name === ".git" || name === "dist" || name === ".wrangler") continue;
     const path = join(dir, name);
     if (statSync(path).isDirectory()) walk(path, acc);
     else acc.push(path);
@@ -44,6 +44,18 @@ for (const path of html) {
   if (text.includes("681-0120") || text.includes("12026810120")) {
     fail(`old phone remains: ${path}`);
   }
+}
+
+// Every indexable page needs its own title, so pages do not compete for the same search.
+const seenTitles = new Map();
+for (const path of html) {
+  const text = readFileSync(path, "utf8");
+  if (/name="robots" content="noindex/.test(text)) continue;
+  const found = text.match(/<title>([^<]*)<\/title>/);
+  if (!found) continue;
+  const pageTitle = found[1].trim();
+  if (seenTitles.has(pageTitle)) fail(`duplicate title "${pageTitle}": ${seenTitles.get(pageTitle)} and ${path}`);
+  else seenTitles.set(pageTitle, path);
 }
 
 const home = readFileSync(join(root, "index.html"), "utf8");
