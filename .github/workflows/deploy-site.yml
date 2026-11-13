@@ -48,7 +48,7 @@ jobs:
                   return None
               emit({"check": label, "http_status": status, "success": data.get("success"),
                     "errors": [{"code": x.get("code"), "message": x.get("message")}
-                               for x in data.get("errors", [])]})
+                               for x in (data.get("errors") or [])]})
               return data.get("result") if status < 400 and data.get("success") is not False else None
           if not token:
               emit({"error": "Existing repository Cloudflare token is unavailable to this workflow."})
