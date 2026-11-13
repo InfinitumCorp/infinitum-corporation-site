@@ -1,4 +1,4 @@
-name: Read-only Cloudflare mail audit
+name: Cloudflare sender self-test
 on:
   workflow_dispatch:
 permissions:
@@ -14,7 +14,11 @@ jobs:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
     steps:
+      - uses: actions/checkout@v4
+      - name: Test requested sender to user's own mailbox and remove temporary Worker
+        run: node .github/mail-sender-self-test.mjs
       - name: Inspect existing mail configuration without making changes
+        if: ${{ false }}
         shell: bash
         run: |
           python3 - <<'PY'
