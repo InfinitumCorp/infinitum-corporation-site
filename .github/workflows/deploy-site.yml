@@ -99,6 +99,29 @@ jobs:
           for item in addresses if isinstance(addresses, list) else []:
               if item.get("email", "").lower() == destination:
                   emit({"expected_destination_found": True, "verified": item.get("verified")})
+          for zone in sorted(zones):
+              sending = get("/zones/" + zone + "/email/sending/subdomains", "email_sending_domains")
+              if isinstance(sending, list):
+                  for item in sending:
+                      emit({"sending_domain": {k: item.get(k) for k in
+                            ("id", "name", "domain", "subdomain", "enabled", "status", "verified")}})
+          settings = get("/accounts/" + account + "/workers/scripts/cumulus-mail/settings",
+                         "existing_cumulus_mail_worker_settings")
+          if isinstance(settings, dict):
+              bindings = settings.get("bindings") or []
+              emit({"existing_mail_worker_bindings": [
+                  {"name": b.get("name"), "type": b.get("type"),
+                   "has_destination_restriction": bool(b.get("destination_address")
+                                                       or b.get("allowed_destination_addresses")),
+                   "expected_destination_allowed": (
+                       b.get("destination_address") == destination
+                       or destination in (b.get("allowed_destination_addresses") or [])),
+                   "info_sender_explicitly_allowed": wanted in (b.get("allowed_sender_addresses") or [])}
+                  for b in bindings
+              ]})
+              emit({"smtp_configuration_binding_names": [
+                  b.get("name") for b in bindings if "SMTP" in (b.get("name") or "").upper()
+              ]})
           emit({"audit_complete": True, "zone_count": len(zones), "mutations": 0,
                 "deployments": 0, "mail_sent": 0})
           PY
