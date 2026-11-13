@@ -86,12 +86,20 @@ try {
   await api(`${scriptPath}/subdomain`, { method: "POST", body: { enabled: true, previews_enabled: false } });
   const url = `https://${workerName}.${subdomain.subdomain}.workers.dev`;
   let ready = false;
-  for (let attempt = 0; attempt < 5; attempt++) {
+  for (let attempt = 0; attempt < 15; attempt++) {
     try {
       const response = await fetch(url, { signal: AbortSignal.timeout(10000) });
-      if (response.ok && await response.text() === "mail-self-test-ready") { ready = true; break; }
-    } catch {}
-    if (attempt < 4) await new Promise(resolve => setTimeout(resolve, 1000));
+      const body = await response.text();
+      report({ temporary_worker_health: {
+        attempt: attempt + 1, http_status: response.status, body_preview: body.slice(0, 120),
+      } });
+      if (response.ok && body === "mail-self-test-ready") { ready = true; break; }
+    } catch (error) {
+      report({ temporary_worker_health: {
+        attempt: attempt + 1, error: String(error.message || error), network_code: error.cause?.code,
+      } });
+    }
+    if (attempt < 14) await new Promise(resolve => setTimeout(resolve, 2000));
   }
   if (!ready) throw new Error("Temporary Worker did not become ready; no send attempted.");
   // Exactly one send request, hard-coded to the user's own mailbox. No retries.
