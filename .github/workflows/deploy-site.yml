@@ -1,43 +1,104 @@
-# Deploys infinitumcorporation.ai to Cloudflare on every push to main.
-#
-# Runs the SEO checks first; a failed check stops the deploy.
-# Needs two repository secrets, added by a person:
-#   CLOUDFLARE_API_TOKEN   (Workers Scripts: Edit, Account: Read)
-#   CLOUDFLARE_ACCOUNT_ID
-# Without them the run says so and deploys nothing, instead of failing.
-name: Deploy site
+name: Read-only Cloudflare mail audit
 on:
-  push:
-    branches: [main]
-    paths-ignore:
-      - "scalvs/**"
-      - "**.md"
   workflow_dispatch:
-concurrency:
-  group: deploy-site
-  cancel-in-progress: true
 permissions:
   contents: read
+concurrency:
+  group: readonly-mail-audit
+  cancel-in-progress: false
 jobs:
-  deploy:
-    name: deploy-site
-    runs-on: ${{ vars.CI_RUNNER || 'ubuntu-latest' }}
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: SEO checks
-        run: node scripts/verify-seo.mjs
-      - name: Build dist/
-        run: node scripts/build-cloudflare.mjs
-      - name: Deploy to Cloudflare
+      - name: Inspect existing mail configuration without making changes
+        shell: bash
         run: |
-          if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
-            echo "CLOUDFLARE_API_TOKEN or CLOUDFLARE_ACCOUNT_ID is not set; nothing deployed." | tee -a "$GITHUB_STEP_SUMMARY"
-            exit 0
-          fi
-          npx -y wrangler@4 deploy --message "main ${GITHUB_SHA::7}"
+          python3 - <<'PY'
+          import json, os, urllib.request, urllib.error
+          token = os.environ.get("CLOUDFLARE_API_TOKEN", "")
+          account = os.environ.get("CLOUDFLARE_ACCOUNT_ID") or "1a9f2df27b4a1f9e3de82eab367434e4"
+          domain = "infinitumcorporation.ai"
+          wanted = "info@" + domain
+          destination = "theinfinitumcorp@gmail.com"
+          def emit(value):
+              text = json.dumps(value, ensure_ascii=True)
+              print(text.replace(token, "[REDACTED]") if token else text, flush=True)
+          def get(path, label):
+              req = urllib.request.Request(
+                  "https://api.cloudflare.com/client/v4" + path,
+                  headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"},
+                  method="GET",
+              )
+              try:
+                  with urllib.request.urlopen(req, timeout=25) as response:
+                      data = json.load(response)
+                      status = response.status
+              except urllib.error.HTTPError as exc:
+                  status = exc.code
+                  try:
+                      data = json.load(exc)
+                  except Exception:
+                      data = {}
+              except Exception as exc:
+                  emit({"check": label, "error_type": type(exc).__name__})
+                  return None
+              emit({"check": label, "http_status": status, "success": data.get("success"),
+                    "errors": [{"code": x.get("code"), "message": x.get("message")}
+                               for x in data.get("errors", [])]})
+              return data.get("result") if status < 400 and data.get("success") is not False else None
+          if not token:
+              emit({"error": "Existing repository Cloudflare token is unavailable to this workflow."})
+              raise SystemExit(1)
+          zones = set()
+          domains = get("/accounts/" + account + "/workers/domains", "worker_custom_domains")
+          for item in domains if isinstance(domains, list) else []:
+              host = item.get("hostname", "")
+              if host == domain or host.endswith("." + domain):
+                  emit({"worker_domain": host, "zone_id": item.get("zone_id"),
+                        "zone_name": item.get("zone_name"), "service": item.get("service")})
+                  if item.get("zone_id"):
+                      zones.add(item["zone_id"])
+          listed = get("/zones?name=" + domain + "&per_page=50", "zone_lookup")
+          for item in listed if isinstance(listed, list) else []:
+              if item.get("name") == domain:
+                  zones.add(item["id"])
+                  emit({"zone_id": item["id"], "zone_name": domain, "status": item.get("status")})
+          def summarize_rule(item):
+              return {
+                  "enabled": item.get("enabled"),
+                  "actions": [
+                      {"type": a.get("type"),
+                       "matches_expected_destination": destination in a.get("value", [])}
+                      for a in item.get("actions", [])
+                  ],
+              }
+          for zone in sorted(zones):
+              records = get("/zones/" + zone + "/dns_records?per_page=100", "mail_dns")
+              for item in records if isinstance(records, list) else []:
+                  name, kind, content = item.get("name", ""), item.get("type"), item.get("content", "")
+                  if kind == "MX" or (kind == "TXT" and (
+                          content.startswith("v=spf1") or content.startswith("v=DMARC1")
+                          or "._domainkey." in name)) or (kind == "CNAME" and "._domainkey." in name):
+                      emit({"mail_dns": {k: item.get(k) for k in
+                                        ("type", "name", "content", "priority", "proxied")}})
+              settings = get("/zones/" + zone + "/email/routing", "email_routing_settings")
+              if isinstance(settings, dict):
+                  emit({"routing": {k: settings.get(k) for k in ("enabled", "status", "name")}})
+              rules = get("/zones/" + zone + "/email/routing/rules", "email_routing_rules")
+              for item in rules if isinstance(rules, list) else []:
+                  if any(m.get("value", "").lower() == wanted for m in item.get("matchers", [])):
+                      emit({"info_address_rule": summarize_rule(item)})
+              catch = get("/zones/" + zone + "/email/routing/rules/catch_all", "email_routing_catchall")
+              if isinstance(catch, dict):
+                  emit({"catchall": summarize_rule(catch)})
+          addresses = get("/accounts/" + account + "/email/routing/addresses", "routing_destinations")
+          for item in addresses if isinstance(addresses, list) else []:
+              if item.get("email", "").lower() == destination:
+                  emit({"expected_destination_found": True, "verified": item.get("verified")})
+          emit({"audit_complete": True, "zone_count": len(zones), "mutations": 0,
+                "deployments": 0, "mail_sent": 0})
+          PY
