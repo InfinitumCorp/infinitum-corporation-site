@@ -92,24 +92,39 @@
       "permanent": true
     },
     {
+      "source": "/scalvs",
+      "destination": "/products/scalus",
+      "permanent": true
+    },
+    {
+      "source": "/scalvs/:path*",
+      "destination": "/products/scalus",
+      "permanent": true
+    },
+    {
+      "source": "/products/SCALVS.ai",
+      "destination": "/products/scalus",
+      "permanent": true
+    },
+    {
       "source": "/downloads",
       "destination": "https://downloads.infinitumcorporation.ai/",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/capabilities",
       "destination": "/#services",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/products",
       "destination": "/#products",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/contact",
       "destination": "/#contact",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/products/firm-wallet",
@@ -129,262 +144,262 @@
     {
       "source": "/download/firm-suite",
       "destination": "https://firmwallet.app",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/firm-suite/windows",
       "destination": "https://firmwallet.app",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/firm-suite/macos",
       "destination": "https://firmwallet.app",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/firm-suite/linux",
       "destination": "https://firmwallet.app",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/firm-suite/android",
       "destination": "https://firmwallet.app",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/firm-suite/ios",
       "destination": "https://firmwallet.app",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/veil",
       "destination": "/products/veil",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/veil/windows",
       "destination": "/products/veil",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/veil/macos",
       "destination": "/products/veil",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/veil/linux",
       "destination": "/products/veil",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/veil/android",
       "destination": "/products/veil",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/veil/ios",
       "destination": "/products/veil",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/fabric",
       "destination": "/products/fabric",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/fabric/windows",
       "destination": "/products/fabric",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/fabric/macos",
       "destination": "/products/fabric",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/fabric/linux",
       "destination": "/products/fabric",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/fabric/android",
       "destination": "/products/fabric",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/fabric/ios",
       "destination": "/products/fabric",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/cumulus",
       "destination": "/products/cumulus-exchange",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/cumulus/windows",
       "destination": "/products/cumulus-exchange",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/cumulus/macos",
       "destination": "/products/cumulus-exchange",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/cumulus/linux",
       "destination": "/products/cumulus-exchange",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/cumulus/android",
       "destination": "/products/cumulus-exchange",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/cumulus/ios",
       "destination": "/products/cumulus-exchange",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/scalvs",
       "destination": "https://scalvs.app",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/scalvs/chrome",
       "destination": "https://scalvs.app",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/scalvs/edge",
       "destination": "https://scalvs.app",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/scalvs/firefox",
       "destination": "https://scalvs.app",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/scalvs/safari",
       "destination": "https://scalvs.app",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/metatron",
       "destination": "/products/metatron",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/metatron/windows",
       "destination": "/products/metatron",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/metatron/macos",
       "destination": "/products/metatron",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/metatron/linux",
       "destination": "/products/metatron",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/architect",
       "destination": "/products/architect",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/architect/windows",
       "destination": "/products/architect",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/architect/macos",
       "destination": "/products/architect",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/architect/linux",
       "destination": "/products/architect",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/spectre",
       "destination": "/products/spectre",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/spectre/windows",
       "destination": "/products/spectre",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/spectre/macos",
       "destination": "/products/spectre",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/spectre/chrome",
       "destination": "/products/spectre",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/spectre/edge",
       "destination": "/products/spectre",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/hrvst",
       "destination": "/products/hrvst",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/hrvst/android",
       "destination": "/products/hrvst",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/hrvst/ios",
       "destination": "/products/hrvst",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/eidetic",
       "destination": "/products/eidetic",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/eidetic/windows",
       "destination": "/products/eidetic",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/eidetic/macos",
       "destination": "/products/eidetic",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/throne-os",
       "destination": "/products/throne",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/throne-os/book",
       "destination": "/products/throne",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/throne-os/tower",
       "destination": "/products/throne",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/download/throne-os/rack",
       "destination": "/products/throne",
-      "permanent": false
+      "permanent": true
     }
   ]
 }
