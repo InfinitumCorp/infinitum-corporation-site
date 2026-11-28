@@ -8,7 +8,17 @@ import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const dist = join(root, "dist");
-const skip = new Set([".git", ".github", "node_modules", "dist", ".wrangler", "wrangler.jsonc"]);
+const skip = new Set([
+  ".git",
+  ".github",
+  "node_modules",
+  "dist",
+  ".wrangler",
+  "wrangler.jsonc",
+  // SCALVS.ai is its own Worker (see .github/workflows/auto-deploy.yml).
+  // Including it here published a thin, indexable duplicate at /scalvs.
+  "scalvs",
+]);
 
 rmSync(dist, { recursive: true, force: true });
 mkdirSync(dist);
